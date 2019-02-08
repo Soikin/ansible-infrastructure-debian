@@ -1,0 +1,32 @@
+---
+# Drop oldest packages
+- import_tasks: delete.yml
+  when: mysql_delete_before_installation
+  tags: mysql_delete_packages
+  ignore_errors: "{{ ansible_check_mode }}"
+# Update oldest packages
+- import_tasks: upgrade.yml
+  when: mysql_upgrade_packages
+  tags: mysql_upgrade_packages
+  ignore_errors: "{{ ansible_check_mode }}"
+
+# Install packages
+- import_tasks: install.yml
+  when: ansible_os_family == 'Debian'
+# Package configuration.
+- import_tasks: secure.yml
+  when: mysql_secure_installation and not mysql_upgrade_packages
+  ignore_errors: "{{ ansible_check_mode }}"
+- import_tasks: databases.yml
+  when: mysql_create_databases
+  tags: mysql_db_and_user
+  ignore_errors: "{{ ansible_check_mode }}"
+- import_tasks: users.yml
+  when: mysql_create_users
+  tags: mysql_db_and_user
+  ignore_errors: "{{ ansible_check_mode }}"
+
+# Update general configs
+- import_tasks: configs.yml
+  when: mysql_default_conf_replace
+- meta: flush_handlers

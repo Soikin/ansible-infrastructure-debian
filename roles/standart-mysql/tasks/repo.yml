@@ -1,0 +1,10 @@
+---
+- name: Add MySQL repository key
+  apt_key: url=http://repo.mysql.com/RPM-GPG-KEY-mysql state=present
+
+- name: Add MySQL Server repository
+  apt_repository: repo='deb http://repo.mysql.com/apt/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} mysql-{{ mysql_package_repo_version }}' state=present update_cache=yes
+
+# - name: Add MySQL Python Connector repository
+#  apt_repository: repo='deb http://repo.mysql.com/apt/{{ ansible_distribution }}/ {{ ansible_distribution_release }} connector-python-2.0' state=present
+#  apt_repository: repo='deb http://repo.mysql.com/apt/{{ ansible_distribution }}/ {{ ansible_distribution_release }} connector-python-2.1' state=present

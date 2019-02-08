@@ -1,0 +1,14 @@
+---
+- name: Delete MySQL packages are installed.
+  apt: "name={{ item }} state=absent purge=yes"
+  register: mysql_delete
+  with_items: "{{ mysql_packages }}"
+
+- name: Clean system database directory
+  file:
+    state: absent
+    path: "{{ item }}"
+  with_items:
+    - /root/.my.cnf
+    - "{{ mysql_datadir }}/"
+  when: mysql_delete.changed

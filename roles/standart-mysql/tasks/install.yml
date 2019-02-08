@@ -1,0 +1,45 @@
+---
+# Add repository
+- import_tasks: repo.yml
+  when: mysql_package_repo_enable
+
+- name: Check if MySQL is already installed.
+  stat: path=/etc/init.d/mysql
+  register: mysql_installed
+
+- name: Update apt cache if MySQL is not yet installed.
+  apt: update_cache=yes
+  when: mysql_installed.stat.exists == false
+
+# See https://github.com/rparsi/ansible/blob/master/roles/mysql/tasks/main.yml
+# - name: Set MySQL root password before installing
+#   debconf: name='mysql-server' question='mysql-server/root_password' value='{{ mysql_root_pass | quote }}' vtype='password'
+#
+# - name: Set the confirm MySQL root password before installing
+#   debconf: name='mysql-server' question='mysql-server/root_password_again' value='{{ mysql_root_pass | quote }}' vtype='password'
+
+- name: Ensure MySQL packages are installed.
+  apt: "name={{ item }} state=present"
+  with_items: "{{ mysql_packages }}"
+
+- name: Ensure MySQL Python libraries are installed.
+  apt: "name=python-mysqldb update_cache=yes state=present install_recommends=yes" # ?? add install_recommends=no for mysql 5.6
+
+# Because Ubuntu starts MySQL as part of the install process, we need to stop
+# mysql and remove the logfiles in case the user set a custom log file size.
+- name: Ensure MySQL is stopped after initial install.
+  service: "name={{ mysql_daemon }} state=stopped"
+  when: mysql_installed.stat.exists == false
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Delete innodb log files created by apt package after initial install.
+  file: path={{ mysql_datadir }}/{{item}} state=absent
+  with_items:
+    - "ib_logfile0"
+    - "ib_logfile1"
+  when: mysql_installed.stat.exists == false
+
+- name: Ensure MySQL is started and enabled on boot.
+  service: "name={{ mysql_daemon }} state=started enabled={{ mysql_enabled_on_startup }}"
+  register: mysql_service_configuration
+  ignore_errors: "{{ ansible_check_mode }}"
