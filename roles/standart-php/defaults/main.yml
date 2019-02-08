@@ -1,47 +1,47 @@
 ---
 # Global default variables
-php7_default_version: 7.1  # required
-php7_default_conf_replace: false
+php_default_version: 7.1  # required
+php_default_conf_replace: false
 
 # Some text
-php7_install_default_packages: true
-php7_list_default_packages:
-  - php{{ php7_default_version }}
-  - php{{ php7_default_version }}-cgi
-  - php{{ php7_default_version }}-common
+php_install_default_packages: true
+php_list_default_packages:
+  - php{{ php_default_version }}
+  - php{{ php_default_version }}-cgi
+  - php{{ php_default_version }}-common
   # Standart package will be installed extra packages
-  # - php{{ php7_default_version }}-cli
-  # - php{{ php7_default_version }}-json
-  # - php{{ php7_default_version }}-opcache
-  # - php{{ php7_default_version }}-readline
+  # - php{{ php_default_version }}-cli
+  # - php{{ php_default_version }}-json
+  # - php{{ php_default_version }}-opcache
+  # - php{{ php_default_version }}-readline
 
 # If you want install additional packages
-php7_install_additional_packages: true
-php7_list_additional_packages:
-  - php{{ php7_default_version }}-gd
-  - php{{ php7_default_version }}-intl
-  - php{{ php7_default_version }}-zip
-  - php{{ php7_default_version }}-curl
-  - php{{ php7_default_version }}-json
-  - php{{ php7_default_version }}-xml
-  - php{{ php7_default_version }}-mbstring
+php_install_additional_packages: true
+php_list_additional_packages:
+  - php{{ php_default_version }}-gd
+  - php{{ php_default_version }}-intl
+  - php{{ php_default_version }}-zip
+  - php{{ php_default_version }}-curl
+  - php{{ php_default_version }}-json
+  - php{{ php_default_version }}-xml
+  - php{{ php_default_version }}-mbstring
 
-php7_install_project_packages: false
-php7_list_project_packages: ""   # required
+php_install_project_packages: false
+php_list_project_packages: ""   # required
 
 # If you want install special list of packages
-php7_install_force_packages: false
-php7_list_force_packages: ""     # required
+php_install_force_packages: false
+php_list_force_packages: ""     # required
 
 # Install php-fpm package
-php7_install_fpm_package: false
+php_install_fpm_package: false
 # Add dev package with PECL repository for install PHP Extensions
-php7_install_dev_package: false
-php7_install_pear_package: false
-# php7_list_pear_package: ""   #TODO
+php_install_dev_package: false
+php_install_pear_package: false
+# php_list_pear_package: ""   #TODO
 
 # Configuration file php-fpm variables
 php_fpm_config_user: "www-data"
 php_fpm_config_group: "nginx"
-php_fpm_config_listen_sock: "/run/php/php{{ php7_default_version }}-fpm.sock"
+php_fpm_config_listen_sock: "/run/php/php{{ php_default_version }}-fpm.sock"
 php_fpm_config_listen_mode: "0660"

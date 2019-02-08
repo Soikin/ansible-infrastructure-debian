@@ -3,64 +3,64 @@
   apt: update_cache=yes
   when: apt_repository_php is defined and apt_repository_php is changed
 
-- name: "Attention! You force install next packages: {{ php7_list_force_packages }}."
+- name: "Attention! You force install next packages: {{ php_list_force_packages }}."
   wait_for: timeout=3
-  when: php7_install_force_packages
+  when: php_install_force_packages
 
 - name: Change default variables.
   set_fact:
-    php7_install_default_packages: false
-    php7_install_additional_packages: false
-    php7_install_project_packages: false
-    php7_install_fpm_package: false
-    php7_install_dev_package: false
-    php7_install_pear_package: false
-  when: php7_install_force_packages
+    php_install_default_packages: false
+    php_install_additional_packages: false
+    php_install_project_packages: false
+    php_install_fpm_package: false
+    php_install_dev_package: false
+    php_install_pear_package: false
+  when: php_install_force_packages
 
 # Install default PHP packages
-- name: "Install default php{{ php7_default_version }} minimum packages."
+- name: "Install default php{{ php_default_version }} minimum packages."
   apt:
     name: "{{ item }}"
     state: present
-  with_items: "{{ php7_list_default_packages }}"
-  when: php7_install_default_packages and php7_list_default_packages is defined
+  with_items: "{{ php_list_default_packages }}"
+  when: php_install_default_packages and php_list_default_packages is defined
 
-- name: "Install additional default php{{ php7_default_version }} packages."
+- name: "Install additional default php{{ php_default_version }} packages."
   apt:
     name: "{{ item }}"
     state: present
-  with_items: "{{ php7_list_additional_packages }}"
-  when: php7_install_additional_packages and php7_list_additional_packages is defined
+  with_items: "{{ php_list_additional_packages }}"
+  when: php_install_additional_packages and php_list_additional_packages is defined
 
-- name: "Install additional project php{{ php7_default_version }} packages."
+- name: "Install additional project php{{ php_default_version }} packages."
   apt:
     name: "{{ item }}"
     state: present
     install_recommends: no
-  with_items: "{{ php7_list_project_packages }}"
-  when: php7_install_project_packages and php7_list_project_packages is defined
+  with_items: "{{ php_list_project_packages }}"
+  when: php_install_project_packages and php_list_project_packages is defined
 
 # Install force PHP packages
-- name: "Force install php{{ php7_default_version }} packages."
+- name: "Force install php{{ php_default_version }} packages."
   apt:
     name: "{{ item }}"
     state: present
-  with_items: "{{ php7_list_force_packages }}"
-  when: php7_install_force_packages and php7_list_force_packages is defined
+  with_items: "{{ php_list_force_packages }}"
+  when: php_install_force_packages and php_list_force_packages is defined
 
 # Install php-fpm package
-- name: "Install php{{ php7_default_version }}-fpm package."
+- name: "Install php{{ php_default_version }}-fpm package."
   apt:
-    name: "php{{ php7_default_version }}-fpm"
+    name: "php{{ php_default_version }}-fpm"
     state: present
-  when: php7_install_fpm_package
+  when: php_install_fpm_package
 
 # Install php-dev package
 - name: "Install php-dev package."
   apt:
     name: php-dev
     state: present
-  when: php7_install_dev_package or php7_install_pear_package
+  when: php_install_dev_package or php_install_pear_package
 
 # Install php-pear package (depends: php-cli, php-common, php-xml, php-dev)
 - name: "Install php-pear package (adding PECL repository)."
@@ -68,17 +68,17 @@
     name: php-pear
     state: present
     install_recommends: no
-  when: php7_install_dev_package or php7_install_pear_package
+  when: php_install_dev_package or php_install_pear_package
 
 # TODO: This module doesn't working for install packages, like: pear/name, pecl/name, name
 # - name: Install PHP packages with the pear package manager.
 #   pear:
-#     name: "{{ php7_list_pear_package }}"
+#     name: "{{ php_list_pear_package }}"
 #     state: present
-#   when: php7_list_pear_package is defined
+#   when: php_list_pear_package is defined
 
 # Manages symbolic links using the ‘update-alternatives’ tool (depends: update-alternatives)
-- name: "Ensure if php{{ php7_default_version }} version is standard for the system."
+- name: "Ensure if php{{ php_default_version }} version is standard for the system."
   alternatives:
     name: php
-    path: "/usr/bin/php{{ php7_default_version }}"
+    path: "/usr/bin/php{{ php_default_version }}"

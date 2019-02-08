@@ -9,5 +9,5 @@
 
 # Package configuration.
 - import_tasks: configure.yml
-  when: php7_default_conf_replace
+  when: php_default_conf_replace
   ignore_errors: "{{ ansible_check_mode }}"
