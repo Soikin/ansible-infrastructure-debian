@@ -1,0 +1,9 @@
+---
+# Default variables
+project_deploy: false
+# Define it above in your playbook.
+project_lemp_sites_list: []
+  # - name: pr.st0.web
+  #   user: project
+  #   htdocs: htdocs-praca
+  #   ssl: false

@@ -1,0 +1,44 @@
+---
+# - name: Install additional PHP 7.1 packages.
+#   apt: pkg={{ item }} update_cache=yes cache_valid_time=7200 state=present
+#   with_items:
+#     - php7.1-mysql
+#     - php-memcache
+#   ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Create user for project
+  user: >
+    name={{ item.name }}
+    shell={{ item.shell | default ( "/bin/bash" ) }}
+    home={{ item.home }}
+    state=present
+  with_items: "{{ project_users | default( {} ) }}"
+  when: commontools_project_users is defined
+
+- name: Create htdocs folders.
+  file:
+    path: "/h/{{ item.user }}/{{ item.htdocs }}"
+    state: directory
+    owner: "{{ item.user }}"
+    group: "{{ item.user }}"
+    mode: 0755
+  with_items: "{{ project_lemp_sites_list }}"
+
+- name: Copy nginx project lemp configs.
+  template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/1-{{ item.name }}.conf
+  with_items: "{{ project_lemp_sites_list }}"
+  notify: reload nginx
+
+- name: Enable nginx project lemp configs.
+  file: src=/etc/nginx/sites-available/1-{{ item.name }}.conf dest=/etc/nginx/sites-enabled/1-{{ item.name }}.conf state=link
+  ignore_errors: "{{ ansible_check_mode }}"
+  with_items: "{{ project_lemp_sites_list }}"
+  notify: restart nginx
+
+# - name: Install WP-CLI  # For WordPress Engine
+#   get_url:
+#     url=https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+#     dest=/usr/local/bin/wp
+#     mode=0755
+#   sudo: yes
+#   tags: wp-cli

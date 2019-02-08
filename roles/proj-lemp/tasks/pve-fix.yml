@@ -1,0 +1,23 @@
+---
+- name: Fix for pve kernel. # cron
+  template:
+    src: phpsessionclean
+    dest: /etc/cron.d/php
+    mode: 0644
+  notify: restart cron
+  tags: pve_fix
+  when: ansible_distribution_major_version < '9'
+
+- name: Fix for pve kernel. # disable phpsessionclean service
+  systemd: name={{ item }} state=stopped enabled=no masked=yes
+  with_items:
+    - phpsessionclean.service
+    - phpsessionclean.timer
+  tags: pve_fix
+  when: ansible_distribution_major_version < '9'
+
+- name: install setfacl support
+  become: yes
+  apt: pkg=acl
+  tags: pve_fix
+  when: ansible_distribution_major_version == '9'
