@@ -1,0 +1,13 @@
+---
+# Setup/install tasks.
+- import_tasks: repo.yml
+  when: ansible_os_family == 'Debian'
+
+- import_tasks: install.yml
+  when: ansible_os_family == 'Debian'
+  ignore_errors: "{{ ansible_check_mode }}"
+
+# Package configuration.
+- import_tasks: configure.yml
+  when: php7_default_conf_replace
+  ignore_errors: "{{ ansible_check_mode }}"

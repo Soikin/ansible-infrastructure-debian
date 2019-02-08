@@ -1,0 +1,43 @@
+---
+- name: "Check if php{{ php7_default_version }}-fpm is installing."
+  stat: path="/etc/php/{{ php7_default_version }}/fpm"
+  register: check_php_fpm
+  # failed_when: not check_php_fpm.stat.exists
+
+- name: "Check if php{{ php7_default_version }}-fpm default config in safety."
+  stat: path="/etc/php/{{ php7_default_version }}/fpm/pool.d/www.conf.default"
+  register: check_php_fpm_default_config
+
+- name: Backup original config for php-fpm (1/2).
+  copy:
+    src: "/etc/php/{{ php7_default_version }}/fpm/pool.d/www.conf"
+    dest: "/etc/php/{{ php7_default_version }}/fpm/pool.d/www.conf.default"
+    remote_src: true
+  when: check_php_fpm.stat.exists and not check_php_fpm_default_config.stat.exists
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Remove original config for php-fpm (2/2).
+  file: path="/etc/php/{{ php7_default_version }}/fpm/pool.d/www.conf" state=absent
+  when: check_php_fpm.stat.exists and not check_php_fpm_default_config.stat.exists
+
+- name: Copy the default lite php-fpm config.
+  template:
+    src: php-fpm.conf.lite.j2
+    dest: "/etc/php/{{ php7_default_version }}/fpm/pool.d/www.conf"
+  when: check_php_fpm.stat.exists
+  notify: restart php-fpm
+
+- name: Check that the xdebug.ini exists.
+  stat:
+    path: "/etc/php/{{ php7_default_version }}/mods-available/xdebug.ini"
+  register: xdebug
+  when: setting_environment == "dev"
+
+- name: Configure php-xdebig when xdebug.ini exists.
+  template:
+    src: xdebug.ini.j2
+    dest: "/etc/php/{{ php7_default_version }}/mods-available/xdebug.ini"
+    owner: root
+    group: root
+    mode: 0644
+  when: xdebug.stat.exists == true and setting_environment == "dev"

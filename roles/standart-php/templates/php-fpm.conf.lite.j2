@@ -1,0 +1,22 @@
+; This file is managed by ansible, don't make changes here - they will be overwritten.
+
+[www]
+
+; Unix user/group of processes
+user  = {{ php_fpm_config_user }}
+group = {{ php_fpm_config_group }}
+
+; The address on which to accept FastCGI requests.
+listen = {{ php_fpm_config_listen_sock }}
+
+; Set permissions for unix socket
+listen.owner = {{ php_fpm_config_user }}
+listen.group = {{ php_fpm_config_group }}
+listen.mode  = {{ php_fpm_config_listen_mode }}
+
+; Settings of process manager
+pm                   = dynamic
+pm.max_children      = 5
+pm.start_servers     = 2
+pm.min_spare_servers = 1
+pm.max_spare_servers = 3

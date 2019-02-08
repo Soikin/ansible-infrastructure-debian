@@ -1,0 +1,21 @@
+---
+# Ubuntu repositories availible for version 14.04 LTS, 16.04 LTS, 18.04 LTS.
+- name: Add Ondrej repository and key for Ubuntu.
+  apt_repository:
+    repo: 'ppa:ondrej/php'
+    state: present
+    update_cache: yes
+  when: ansible_distribution == 'Ubuntu'
+
+# Debian repositories availible for version 8.x and 9.x (last check July 2018).
+- name: Add Ondrej key for Debian.
+  apt_key: url=https://packages.sury.org/php/apt.gpg state=present
+  when: ansible_distribution == 'Debian'
+
+- name: Add Ondrej repository for Debian.
+  apt_repository: repo="{{ item }}" update_cache=yes
+  with_items:
+   - deb https://packages.sury.org/php/ {{ ansible_distribution_release }} main
+   - deb-src https://packages.sury.org/php/ {{ ansible_distribution_release }} main
+  register: apt_repository_php
+  when: ansible_distribution == 'Debian'
