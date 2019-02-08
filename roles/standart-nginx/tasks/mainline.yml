@@ -1,0 +1,12 @@
+- name: Add Nginx mainline repository (deb)
+  apt_repository: repo='deb http://nginx.org/packages/mainline/{{ ansible_distribution|lower }}/ {{ ansible_distribution_release|lower }} nginx' state=present
+  when: nginx_repo_mainline_use
+
+- name: Nginx mainline repository (deb-src)
+  apt_repository: repo='deb-src http://nginx.org/packages/mainline/{{ ansible_distribution|lower }}/ {{ ansible_distribution_release|lower }} nginx' state=present
+  when: nginx_repo_mainline_use
+
+- name: Add Nginx.org key
+  apt_key: url=http://nginx.org/keys/nginx_signing.key state=present
+  when: nginx_repo_mainline_use
+  register: nginx_repo_mainline_use

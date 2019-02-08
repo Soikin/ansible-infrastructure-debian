@@ -1,0 +1,26 @@
+---
+# Use the official Nginx mainline repository.
+nginx_repo_mainline_use: false
+
+# Use the official Nginx PPA for Ubuntu | deb for Debian, and the version to use if so.
+# nginx_version:""   # if you want install specific version defined in playbook
+nginx_repo_use: false
+nginx_ppa_version: stable
+nginx_package: nginx
+
+# Nginx configuration
+nginx_default_conf_replace: false
+nginx_default_vhost_delete: true
+
+# Nginx config parameters
+nginx_conf_enable_gzip: true
+nginx_static_enable_optimization: true
+
+nginx_conf_user: nginx
+nginx_conf_worker_processes: auto
+nginx_conf_worker_connections: 1024
+nginx_conf_keepalive_timeout: 65
+nginx_conf_file_path: /etc/nginx/nginx.conf
+
+#nginx_default_http_port: "80"
+#nginx_default_https_port: "443"

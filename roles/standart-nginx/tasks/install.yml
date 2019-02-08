@@ -1,0 +1,22 @@
+---
+- name: Update apt cache.
+  apt: update_cache=yes cache_valid_time=86400
+
+- name: Install Nginx with specific version
+  apt: name="{{ nginx_package }}={{ nginx_version }}*" update_cache=yes state=present force=yes
+  when: nginx_version is defined
+  notify: start nginx
+
+- name: Install Nginx with default version
+  apt: name="{{ nginx_package }}" state=present force=yes
+  when: nginx_version is not defined
+  notify: start nginx
+
+- name: Make sure the sites-available, sites-enabled and conf.d directories exist
+  file:
+    path: "/etc/nginx/{{ item }}"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+  with_items: ["sites-available", "sites-enabled", "conf.d", "includes"]
