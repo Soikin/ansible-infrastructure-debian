@@ -1,0 +1,20 @@
+---
+- name: Create users
+  user: "name={{ item.name }} shell={{ item.shell }} state=present"
+  with_items: "{{ users }}"
+  when: 'item.name|string in user_list_deploy'
+
+- name: Add ssh key
+  authorized_key: "user={{ item.name }} key='{{ lookup('file', item.ssh_key) }}' exclusive=yes"
+  with_items: "{{ users }}"
+  when: 'item.name|string in user_list_deploy'
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Delete a user
+  user: name="{{item.name}}" remove=yes state=absent
+  with_items: "{{ users }}"
+  when: 'item.name|string in user_list_remove'
+
+- name: Add users to sudo group without password.
+  import_tasks: sudo.yml
+  when: setting_environment == 'dev' or user_force_add_sudo

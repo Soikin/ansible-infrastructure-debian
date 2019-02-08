@@ -1,0 +1,29 @@
+---
+#- name: Include debug variables
+#  import_tasks: debug.yml
+#  tags: all
+
+- name: R00
+  import_tasks: update.yml
+  when: install_updates
+  tags: update
+
+- name: R01
+  import_tasks: utilites.yml
+  when: install_utilites
+  tags: utilites
+
+- name: R02
+  import_tasks: users.yml
+  when: create_users
+  tags: users
+
+- name: R03
+  import_tasks: init.yml
+  when: update_init
+  tags: init
+
+- name: R04
+  import_tasks: security.yml
+  when: update_security
+  tags: security

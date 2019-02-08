@@ -1,0 +1,16 @@
+---
+- name: Adding existing user to group sudo.
+  user: >
+      name='{{ item.name }}'
+      groups=sudo
+      append=yes
+  with_items: "{{ users }}"
+  when: 'item.name|string in user_list_deploy'
+
+- name: Add sudo group to witch no password.
+  lineinfile: >
+      dest=/etc/sudoers
+      regexp="^%sudo"
+      line="%sudo ALL=(ALL:ALL) NOPASSWD:ALL"
+      state=present
+      backup=yes

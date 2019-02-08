@@ -1,0 +1,33 @@
+---
+install_updates: false
+upgrade_packages: false
+install_utilites: false
+create_users: false
+update_init: false
+update_security: false
+
+change_local_hostname: false
+force_update_local_ca: false
+user_force_add_sudo: false
+
+update_ansible_key: false
+
+# These variables must be defined in the main playbook,
+# in that case the host file generate valid FQDN in hosts file.
+#   new_local_hostname: ""
+# Optional: you can use additional variables for second FQDN record.
+#   new_second_full_domain: ""
+
+set_default_timezone: "Europe/Minsk"
+# Example: Europe/Minsk or Europe/Moscow
+
+user_list_deploy: []
+user_list_remove: []
+
+users:
+ - name: soikin
+   shell: /bin/bash
+   ssh_key: files/public-ssh-key/soikin.pub
+ # - name: man
+ #   shell: /bin/bash
+ #   ssh_key: files/public-ssh-key/man.pub

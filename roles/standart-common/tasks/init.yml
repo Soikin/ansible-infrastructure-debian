@@ -1,0 +1,49 @@
+---
+- name: Update root bashrc config file.
+  template:
+    src: "bashrc.j2"
+    dest: "/root/.bashrc"
+  when:  setting_environment is defined
+
+- name: Update locale US for system.
+  locale_gen: name=en_US.UTF-8 state=present
+
+- name: Update locale RU for system.
+  locale_gen: name=ru_RU.UTF-8 state=present
+
+- name: Update locale BY for system.
+  locale_gen: name=be_BY.UTF-8 state=present
+
+- name: Set default timezone to {{ set_default_timezone }}.
+  timezone: name={{ set_default_timezone }}
+  notify: restart cron
+
+- name: Change hostname of VM (check mode is not working).
+  hostname: name="{{ new_local_hostname }}"
+  register: hostname
+  when: new_local_hostname is defined and change_local_hostname
+
+- name: Include tasks for change hostname.
+  import_tasks: init_host.yml
+  when: hostname.changed
+
+- name: Copy on WebDev Certificate Authority (CA).
+  copy: src=VARB-CA.crt dest=/usr/local/share/ca-certificates/VARB-CA.crt
+  notify: update ca certificates
+
+# - name: Add backup directory.
+#   file: path="/mnt/backup" state=directory owner=root group=root mode=0777
+
+- name: Update resolv config file.
+  template:
+    src: "resolv.conf.j2"
+    dest: "/etc/resolv.conf"
+
+- name: Update ansible public key (special task).
+  authorized_key:
+    user: "{{ ansible_user }}"
+    state: present
+    key: "{{ lookup('file', 'files/ansible-ssh-key/ansible.id_rsa.pub') }}"
+    exclusive: yes # leave only one public key
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: update_ansible_key

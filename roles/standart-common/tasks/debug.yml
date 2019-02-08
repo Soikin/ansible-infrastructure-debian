@@ -1,0 +1,16 @@
+---
+# general
+- debug: var="setting_environment"
+# install.yml
+- debug: var="install_utilites"
+- debug: var="create_users"
+- debug: var="install_updates"
+# init.yml
+- debug: var=change_local_hostname
+- debug: var=new_local_hostname
+- debug: var=inventory_hostname
+- debug: var=ansible_default_ipv4.address
+- debug: var=ansible_fqdn
+# users.yml
+- debug: var="user_list_deploy"
+- debug: var="user_list_remove"

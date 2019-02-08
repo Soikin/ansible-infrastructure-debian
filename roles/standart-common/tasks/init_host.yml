@@ -1,0 +1,15 @@
+---
+- name: Replace hosts file if hostname changed.
+  template:
+    src: "hosts.j2"
+    dest: "/etc/hosts"
+
+- name: Restarting machine
+  shell: sleep 2 && shutdown -r now "rebooting to complete hostname change"
+  async: 1
+  poll: 0
+  ignore_errors: true
+
+- name: Waiting for server to come back
+  local_action: wait_for port={{ ansible_port | default(22) }} host="{{ ansible_host | default(inventory_hostname) }}" search_regex=OpenSSH delay=30
+  become: no

@@ -1,0 +1,8 @@
+---
+# var
+
+#user_list_deploy: "soikin, man"  # for debug
+#user_list_remove: "soikin, man"
+
+#user_list_deploy: []
+#user_list_remove: []
