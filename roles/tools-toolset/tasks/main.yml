@@ -83,7 +83,7 @@
 - name: Copy nginx toolset.net config.
   template:
     src: nginx.conf.j2
-    dest: /etc/nginx/sites-available/0-toolset.net.conf
+    dest: /etc/nginx/sites-available/0-toolset.conf
     backup: yes
     # validate: "/usr/sbin/nginx -t -c %s"
   when: toolset_copy_nginx_config or toolset_multi_nginx_apache
@@ -91,9 +91,9 @@
 
 - name: Create symlinks for toolset.net config.
   file: >
-    path=/etc/nginx/sites-enabled/0-toolset.net.conf
+    path=/etc/nginx/sites-enabled/0-toolset.conf
     state=link
-    src=/etc/nginx/sites-available/0-toolset.net.conf
+    src=/etc/nginx/sites-available/0-toolset.conf
   when: toolset_copy_nginx_config or toolset_multi_nginx_apache
   ignore_errors: "{{ ansible_check_mode }}"
 
@@ -105,7 +105,7 @@
 - name: Copy apache2 toolset.net config.
   template: >
     src=apache2.conf.j2
-    dest=/etc/apache2/sites-available/0-toolset.net.conf
+    dest=/etc/apache2/sites-available/0-toolset.conf
   when: toolset_copy_apache_config or toolset_multi_nginx_apache
 
 - name: Replace default pots.conf file
@@ -116,8 +116,8 @@
 
 - name: Create symlinks for toolset.net config.
   file: >
-    path=/etc/apache2/sites-enabled/0-toolset.net.conf
+    path=/etc/apache2/sites-enabled/0-toolset.conf
     state=link
-    src=/etc/apache2/sites-available/0-toolset.net.conf
+    src=/etc/apache2/sites-available/0-toolset.conf
   when: toolset_copy_apache_config or toolset_multi_nginx_apache
   ignore_errors: "{{ ansible_check_mode }}"
