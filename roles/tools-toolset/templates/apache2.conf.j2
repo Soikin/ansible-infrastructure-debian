@@ -1,0 +1,100 @@
+# This file is managed by ansible, don't make changes here - they will be overwritten.
+# Apache2 toolset main config file
+
+{% if apache_default_https_port is defined %}
+
+{% if toolset_ip_listen_enable %}
+<VirtualHost 127.0.0.1:{{ apache_default_http_port }} {{ ansible_default_ipv4.address }}:{{ apache_default_http_port }}>
+{% else %}
+<VirtualHost 127.0.0.1:{{ apache_default_http_port }}>
+{% endif %}
+  ServerName {{ toolset_web_hostname }}
+  ServerAlias www.{{ toolset_web_hostname }}
+
+  RewriteEngine on
+  ReWriteCond %{SERVER_PORT} !^{{ apache_default_https_port }}$
+  RewriteRule ^/(.*) https://%{HTTP_HOST}/$1 [NC,R,L]
+  RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+  RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+</VirtualHost>
+
+{% if toolset_ip_listen_enable %}
+<VirtualHost 127.0.0.1:{{ apache_default_http_port }} {{ ansible_default_ipv4.address }}:{{ apache_default_https_port }}>
+{% else %}
+<VirtualHost 127.0.0.1:{{ apache_default_https_port }}>
+{% endif %}
+  ServerName {{ toolset_web_hostname }}
+  ServerAlias www.{{ toolset_web_hostname }}
+
+  RewriteEngine On
+  RewriteCond %{HTTPS_HOST} ^www\.(.*)$ [NC]
+  RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+  DocumentRoot /h/{{ toolset_system_user }}/{{ toolset_web_directory }}
+
+  <Directory /h/{{ toolset_system_user }}/>
+     Options FollowSymLinks
+     AllowOverride None
+  </Directory>
+
+  <Directory /h/{{ toolset_system_user }}/{{ toolset_web_directory }}>
+     Options Indexes FollowSymLinks
+     AllowOverride ALL
+      <IfVersion < 2.4>
+          Order allow,deny
+          Allow from all
+      </IfVersion>
+      <IfVersion >= 2.4>
+          Require all granted
+      </IfVersion>
+  </Directory>
+
+  SSLEngine on
+{% if toolset_copy_certificates %}
+  SSLCertificateFile    {{ toolset_ssl_certificate }}
+  SSLCertificateKeyFile {{ toolset_ssl_certificate_key }}
+{% else %}
+  SSLCertificateFile    {{ toolset_ssl_certificate_dev }}
+  SSLCertificateKeyFile {{ toolset_ssl_certificate_key_dev }}
+{% endif %}
+
+</VirtualHost>
+
+{% else %}
+{% if toolset_ip_listen_enable %}
+<VirtualHost 127.0.0.1:{{ apache_default_http_port }} {{ ansible_default_ipv4.address }}:{{ apache_default_http_port }}>
+{% else %}
+<VirtualHost 127.0.0.1:{{ apache_default_http_port }}>
+{% endif %}
+   ServerName  {{ toolset_web_hostname }}
+   ServerAlias www.{{ toolset_web_hostname }} {% if toolset_additional_hostname is defined %} {{ toolset_additional_hostname }} {% endif %}
+
+   DocumentRoot /h/{{ toolset_system_user }}/{{ toolset_web_directory }}
+
+   <Directory /h/{{ toolset_system_user }}/>
+      Options FollowSymLinks
+      AllowOverride None
+   </Directory>
+
+   <Directory /h/{{ toolset_system_user }}/{{ toolset_web_directory }}>
+      Options Indexes FollowSymLinks
+      AllowOverride ALL
+       <IfVersion < 2.4>
+           Order allow,deny
+           Allow from all
+       </IfVersion>
+       <IfVersion >= 2.4>
+           Require all granted
+       </IfVersion>
+   </Directory>
+
+   # Possible values include: debug, info, notice, warn, error, crit,
+   # alert, emerg.
+   LogLevel warn
+
+   ErrorLog  /var/log/apache2/{{ toolset_web_hostname }}.error.log
+   CustomLog /var/log/apache2/{{ toolset_web_hostname }}.access.log combined
+
+</VirtualHost>
+{% endif %}

@@ -1,0 +1,123 @@
+---
+- name: Ensures root directory if exist.
+  file: path=/h state=directory owner=root group=root
+
+- name: Create system user for project.
+  user: >
+    name={{ toolset_system_user }}
+    shell=/bin/bash
+    home=/h/{{ toolset_system_user }}
+    state=present
+
+- name: Update users bashrc config file
+  copy:
+    src: "/root/.bashrc"
+    dest: "/h/{{ toolset_system_user }}/.bashrc"
+    owner: "{{ toolset_system_user }}"
+    group: "{{ toolset_system_user }}"
+    remote_src: yes
+  when:  setting_environment is defined
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Ensures ssh keys and backup dir exists for project user.
+  file: path=/h/{{ toolset_system_user }}/{{ item.name }} state=directory owner={{ toolset_system_user }} group={{ toolset_system_user }} mode={{ item.mode }}
+  with_items:
+    - { name: ".ssh", mode: "0755" }
+    - { name: "backups", mode: "0775" }
+    - { name: "devpage", mode: "0775" }
+
+# - name: Copy the ssh key user.
+#   copy: >
+#     src={{ item.src }}
+#     dest={{ item.dest }}
+#     owner={{ toolset_system_user }}
+#     group={{ toolset_system_user }}
+#     mode={{ item.mode }}
+#   with_items:
+#     - { src: "ssh/id_rsa", dest: "/h/{{ toolset_system_user }}/.ssh/id_rsa", mode: "0600" }
+#     - { src: "ssh/id_rsa.pub", dest: "/h/{{ toolset_system_user }}/.ssh/id_rsa.pub", mode: "0640" }
+#     - { src: "ssh/authorized_keys", dest: "/h/{{ toolset_system_user }}/.ssh/authorized_keys", mode: "0644" }
+#   ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Ensures system user web directory if exist.
+  file: >
+    path=/h/{{ toolset_system_user }}/{{ toolset_web_directory }}
+    state=directory
+    owner={{ toolset_system_user }}
+    group={{ toolset_system_user }}
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Copy toolset page.
+  copy:
+    src: "{{ item.src }}"
+    dest: "/h/{{ toolset_system_user }}/{{ item.dest }}"
+    owner: "{{ toolset_system_user }}"
+    group: "{{ toolset_system_user }}"
+  with_items:
+    - { src: "htdocs/index.html", dest: "{{ toolset_web_directory }}/index.html" }
+    - { src: "htdocs/index.html", dest: "devpage/index.php" }
+    - { src: "htdocs/phpinfo.php", dest: "devpage/phpinfo.php" }
+    - { src: "htdocs/maintenance.html", dest: "devpage/maintenance.html" }
+    - { src: "htdocs/robots.txt", dest: "{{ toolset_web_directory }}/robots.txt" }
+
+- name: Create user for project
+  user: >
+    name={{ item.name }}
+    shell={{ item.shell | default ( "/bin/bash" ) }}
+    home={{ item.home }}
+    state=present
+  with_items: "{{ toolset_project_users | default( {} ) }}"
+  when: toolset_project_users is defined
+
+- name: Copy willdcart toolset.rit certificate.
+  copy: >
+    src={{ item.src }}
+    dest=/etc/ssl/{{ item.dest }}
+    mode={{ item.mode }}
+  with_items:
+    - { src: "toolset.rit.crt", dest: "certs/toolset.rit.crt", mode: "0644" }
+    - { src: "toolset.rit.key", dest: "private/toolset.rit.key", mode: "0600" }
+  when: toolset_copy_certificates
+  notify: reload nginx
+
+- name: Copy nginx toolset.net config.
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/0-toolset.net.conf
+    backup: yes
+    # validate: "/usr/sbin/nginx -t -c %s"
+  when: toolset_copy_nginx_config or toolset_multi_nginx_apache
+  notify: reload nginx
+
+- name: Create symlinks for toolset.net config.
+  file: >
+    path=/etc/nginx/sites-enabled/0-toolset.net.conf
+    state=link
+    src=/etc/nginx/sites-available/0-toolset.net.conf
+  when: toolset_copy_nginx_config or toolset_multi_nginx_apache
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Validate nginx.conf file.
+  command: nginx -t
+  changed_when: false
+  when: toolset_copy_nginx_config or toolset_multi_nginx_apache
+
+- name: Copy apache2 toolset.net config.
+  template: >
+    src=apache2.conf.j2
+    dest=/etc/apache2/sites-available/0-toolset.net.conf
+  when: toolset_copy_apache_config or toolset_multi_nginx_apache
+
+- name: Replace default pots.conf file
+  template:
+    src: "ports.conf.j2"
+    dest: "/etc/apache2/ports.conf"
+  when: toolset_copy_apache_config or toolset_multi_nginx_apache
+
+- name: Create symlinks for toolset.net config.
+  file: >
+    path=/etc/apache2/sites-enabled/0-toolset.net.conf
+    state=link
+    src=/etc/apache2/sites-available/0-toolset.net.conf
+  when: toolset_copy_apache_config or toolset_multi_nginx_apache
+  ignore_errors: "{{ ansible_check_mode }}"

@@ -1,0 +1,64 @@
+# This file is managed by ansible, don't make changes here - they will be overwritten.
+# Nginx toolset main config file
+
+server {
+    listen       {% if toolset_ip_listen_enable %}{{ ansible_default_ipv4.address }}:{% endif %}{{ nginx_default_http_port }};
+    server_name  {{ toolset_web_hostname }} www.{{ toolset_web_hostname }}{% if toolset_web_hostname_alias is defined %} {{ toolset_web_hostname_alias }}{% endif %};
+{% if nginx_default_https_port is defined %}
+    return 301   https://$server_name$request_uri;
+}
+
+server {
+{% endif %}
+{% if nginx_default_https_port is defined %}
+    listen       {% if toolset_ip_listen_enable %}{{ ansible_default_ipv4.address }}:{% endif %}{{ nginx_default_https_port }} ssl{% if toolset_sni_enable %} default_server{% endif %};
+    # If you get two different certificates, define a standard server for backward compatibility with old clients.
+    # SNI {% if toolset_sni_enable %}is{% else %}is not{% endif %} supported.
+    server_name  {{ toolset_web_hostname }} www.{{ toolset_web_hostname }}{% if toolset_web_hostname_alias is defined %} {{ toolset_web_hostname_alias }}{% endif %};
+{% endif %}
+
+    root         /h/{{ toolset_nginx_user }}/{{ toolset_web_directory }};
+    index        index.html index.php;
+
+    access_log   /var/log/nginx/{{ toolset_web_hostname }}.access.log;
+    error_log    /var/log/nginx/{{ toolset_web_hostname }}.error.log;
+
+    # Locations
+    location / {
+
+    # Show index.html
+    try_files $uri $uri/ /index.html;
+
+    include /etc/nginx/includes/*.conf;
+
+{% if toolset_copy_apache_config %}
+    location ~ \.php$ {
+      try_files $uri $uri/ /index.php;  # or index.html
+      proxy_pass http://127.0.0.1:{{ apache_default_http_port }};
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+{% endif %}
+    # Deny access to hidden files (except .well-known folder)
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+
+    }
+{% if nginx_default_https_port is defined %}
+
+    # SSL
+{% if toolset_copy_certificates %}
+    ssl_certificate      {{ toolset_ssl_certificate }};
+    ssl_certificate_key  {{ toolset_ssl_certificate_key }};
+{% endif %}
+    ssl_session_timeout  5m;
+    ssl_protocols  TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers    HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers   on;
+{% endif %}
+
+}

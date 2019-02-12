@@ -1,0 +1,30 @@
+---
+# Users project variables
+toolset_copy_certificates: false
+toolset_sni_enable: false
+toolset_ip_listen_enable: false
+toolset_system_user: toolset
+toolset_web_directory: htdocs
+toolset_copy_nginx_config: false
+toolset_copy_apache_config: false
+toolset_multi_nginx_apache: false
+toolset_web_hostname: "{{ inventory_hostname }}"
+# toolset_web_hostname_alias: ""
+
+#toolset_additional_hostname: ""   # not working
+#toolset_additional_include: []    # not working
+
+# Nginx config
+toolset_nginx_user: "{{ toolset_system_user }}"
+toolset_ssl_certificate: /etc/ssl/certs/toolset.rit.crt
+toolset_ssl_certificate_key: /etc/ssl/private/toolset.rit.key
+
+# Apache2 config
+
+# toolset_project_users:
+#  - name: "project"
+#    shell: /bin/bash (default)
+#    home: /h/project"
+
+#nginx_default_http_port: "80"
+#nginx_default_https_port: "443"

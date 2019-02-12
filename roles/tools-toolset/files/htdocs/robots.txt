@@ -1,0 +1,5 @@
+# This file is managed by ansible, don't make changes here - they will be overwritten.
+
+# To exclude all robots from the entire server
+User-agent: *
+Disallow: /
