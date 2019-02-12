@@ -35,7 +35,7 @@ server {
   }
 
 {% if item.ssl %}
-  include /etc/nginx/includes/letsencrypt.conf;
+  #include /etc/nginx/includes/letsencrypt.conf;
 {% endif %}
 {% if item.ssl %}
   # SSL
