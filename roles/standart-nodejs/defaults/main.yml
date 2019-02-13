@@ -1,0 +1,16 @@
+---
+# Set the oldest version of Node.js to install ("0.10", "0.12", "4.x", "5.x").
+# Set the version of Node.js to install ("6.x", "8.x", "9.x").
+# Version numbers from Nodesource: https://github.com/nodesource/distributions
+nodejs_version: "6.x"
+nodejs_npm_version: "latest"
+
+# Define a list of local or global packages to be installed with NPM.
+nodejs_npm_local_packages: []
+# nodejs_npm_local_path:
+nodejs_npm_global_packages: []
+#  # Install a specific version of a package.
+#  - name: jslint
+#    version: 0.9.3
+#  # Install the latest stable release of a package.
+#  - name: node-sass

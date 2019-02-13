@@ -1,0 +1,19 @@
+---
+- name: Install latest Node.js from repository.
+  apt: pkg=nodejs update_cache=yes cache_valid_time=86400 state=latest
+
+- name: Update npm to "{{ nodejs_npm_version }}" version.
+  npm: name=npm state=present global=yes version="{{ nodejs_npm_version }}"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Install packages locally.
+  npm: name="{{ item }}" path="{{ nodejs_npm_local_path }}"
+  with_items: "{{ nodejs_npm_local_packages }}"
+  when: nodejs_npm_local_path is defined
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Install packages globally.
+  npm: name="{{ item }}" global=yes
+  with_items: "{{ nodejs_npm_global_packages }}"
+  when: nodejs_npm_global_packages is defined
+  ignore_errors: "{{ ansible_check_mode }}"
