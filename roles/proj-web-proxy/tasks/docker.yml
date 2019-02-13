@@ -1,0 +1,15 @@
+---
+- name: Copy nginx project docker configs.
+  template: src=nginx-docker.conf.j2 dest=/etc/nginx/sites-available/1-{{ item.name }}.conf
+  with_items: "{{ project_web_proxy_sites_list }}"
+  notify: reload nginx
+
+- name: Enable nginx project docker configs.
+  file: src=/etc/nginx/sites-available/1-{{ item.name }}.conf dest=/etc/nginx/sites-enabled/1-{{ item.name }}.conf state=link
+  ignore_errors: "{{ ansible_check_mode }}"
+  with_items: "{{ project_web_proxy_sites_list }}"
+  notify: restart nginx
+
+# - name: Copy nginx docker config.
+#   template: src=nginx-docker-proxy.conf.j2 dest=/etc/nginx/nginx-docker-proxy.conf
+#   notify: reload nginx

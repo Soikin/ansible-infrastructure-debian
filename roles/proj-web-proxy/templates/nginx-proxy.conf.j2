@@ -1,0 +1,59 @@
+# This file is managed by ansible, don't make changes here - they will be overwritten.
+# Nginx auto generate template for proxy
+{% if item.ssl %}
+
+server {
+  listen {{ ansible_default_ipv4.address }}:{{ nginx_default_http_port }};
+  server_name {{ item.name }} www.{{ item.name }};
+  return 301 https://$host$request_uri;
+}
+{% else %}
+{% endif %}
+
+server {
+{% if item.ssl %}
+  listen {{ ansible_default_ipv4.address }}:{{ nginx_default_https_port }} ssl;
+  server_name {{ item.name }} www.{{ item.name }};
+{% else %}
+  listen {{ ansible_default_ipv4.address }}:{{ nginx_default_http_port }};
+  server_name {{ item.name }} www.{{ item.name }};
+{% endif %}
+
+  access_log   /var/log/nginx/{{ item.name }}.access.log;
+  error_log    /var/log/nginx/{{ item.name }}.error.log;
+
+  location / {
+    if (-f /h/toolset/maintenance) {
+    return 503;
+    }
+
+    # Proxy
+    proxy_pass http://{{ item.proxy_ip }}:{{ item.proxy_port }};
+
+    # Extra options, override include config.
+    keepalive_timeout 180;
+    client_max_body_size 200M;
+
+    include /etc/nginx/nginx-web-proxy.conf;
+{% if item.ssl %}
+    #include /etc/nginx/includes/letsencrypt.conf;
+{% endif %}
+  }
+
+  # Custom error page
+  error_page 503 @maintenance;
+  location @maintenance {
+    root /h/toolset/devpage/;
+    rewrite ^(.*)$ /maintenance.html break;
+  }
+
+{% if item.ssl %}
+  # SSL
+  ssl_certificate      /etc/nginx/ssl/{{ item.name }}.crt;
+  ssl_certificate_key  /etc/nginx/ssl/{{ item.name }}.key;
+  ssl_session_timeout  5m;
+  ssl_protocols        TLSv1 TLSv1.1 TLSv1.2;
+  ssl_ciphers          HIGH:!aNULL:!MD5;
+  ssl_prefer_server_ciphers   on;
+{% endif %}
+}

@@ -1,0 +1,11 @@
+---
+# Default variables
+project_deploy_to_docker_host: false
+project_deploy_to_proxy_host: false
+
+# Define it above in your playbook.
+project_web_proxy_sites_list: []
+  # - name: my-site.va
+  #   proxy_ip: 10.10.0.1
+  #   proxy_port: 80
+  #   ssl: true

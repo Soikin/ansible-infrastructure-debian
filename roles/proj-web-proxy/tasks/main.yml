@@ -1,0 +1,6 @@
+---
+- import_tasks: "proxy.yml"
+  when: project_deploy_to_proxy_host
+
+- import_tasks: "docker.yml"
+  when: project_deploy_to_docker_host
