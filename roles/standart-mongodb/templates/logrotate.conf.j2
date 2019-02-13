@@ -1,0 +1,15 @@
+# This file is managed by ansible, don't make changes here - they will be overwritten.
+
+/var/log/mongodb/mongod.log {
+    weekly
+    rotate 7
+    compress
+    delaycompress
+    notifempty
+    missingok
+    copytruncate
+    create 0644 mongodb mongodb
+    postrotate
+         /bin/systemctl kill -s SIGUSR1 mongod.service
+    endscript
+}

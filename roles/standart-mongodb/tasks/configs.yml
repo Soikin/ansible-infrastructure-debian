@@ -1,0 +1,20 @@
+---
+- name: Replace default configuration config.
+  template:
+    src=mongodb.conf.j2
+    dest=/etc/mongodb.conf
+  when: mongodb_default_conf_replace
+  notify: mongodb-restart
+
+- name: Copy supervisor logrotate config.
+  template: src={{item.src}} dest={{item.dest}}
+  with_items:
+    - { src: 'logrotate.conf.j2', dest: '/etc/logrotate.d/mongod' }
+
+# It works only after a manual restart
+- name: Set logrotate settings for main config.
+  lineinfile: dest=/etc/mongod.conf line={{ item.line }} insertafter=^{{ item.insertafter }}
+  with_items:
+    - { line: "  logRotate: reopen", insertafter: "  logAppend: true" }
+  ignore_errors: "{{ ansible_check_mode }}"
+# notify: mongodb-restart

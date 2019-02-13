@@ -1,0 +1,9 @@
+---
+# Install mongodb-org v3.2 and higher
+- name: Install signing key for mongodb-org repository.
+  apt_key: keyserver=keyserver.ubuntu.com id=0C49F3730359A14518585931BC711F9BA15703C6
+
+- name: Add official mongodb repository.
+  apt_repository:
+    repo: deb [ arch=amd64 ] http://repo.mongodb.org/apt/{{ ansible_distribution | lower }} {{ ansible_distribution_release }}/mongodb-org/{{ mongodb_package_install_version }} multiverse
+    filename: mongodb-{{ mongodb_package_install_version }}

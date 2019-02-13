@@ -1,0 +1,20 @@
+---
+- name: mongodb-boot
+  systemd:
+    name: "{{ mongodb_daemon }}"
+    enabled: yes
+
+- name: mongodb-start
+  systemd:
+    name: "{{ mongodb_daemon }}"
+    state: started
+
+- name: mongodb-restart
+  systemd:
+    name: "{{ mongodb_daemon }}"
+    state: restarted
+
+- name: mongodb-reload
+  systemd:
+    name: "{{ mongodb_daemon }}"
+    state: reloaded

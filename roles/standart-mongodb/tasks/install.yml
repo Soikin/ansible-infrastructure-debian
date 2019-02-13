@@ -1,0 +1,8 @@
+---
+# Install
+- name: Install mongodb package.
+  apt: name={{ mongodb_package }} update_cache=yes
+  ignore_errors: "{{ ansible_check_mode }}"
+  notify:
+    - mongodb-boot
+    - mongodb-start

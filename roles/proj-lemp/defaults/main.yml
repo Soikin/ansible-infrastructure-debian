@@ -3,7 +3,7 @@
 project_deploy: false
 # Define it above in your playbook.
 project_lemp_sites_list: []
-  # - name: pr.st0.web
+  # - name: project.rit
   #   user: project
-  #   htdocs: htdocs-praca
+  #   htdocs: htdocs
   #   ssl: false

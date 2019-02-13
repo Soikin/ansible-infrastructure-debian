@@ -1,0 +1,6 @@
+---
+# Set default variables
+mongodb_daemon: mongod
+mongodb_package: mongodb-org
+mongodb_package_install_version: 3.6 # 3.2 or 3.4 or 3.6
+mongodb_default_conf_replace: false
