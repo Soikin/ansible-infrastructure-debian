@@ -1,0 +1,13 @@
+# This file is managed by ansible, don't make changes here - they will be overwritten.
+
+/var/log/{{ firewall_systemd_name }}/*.log {
+    daily
+    rotate 30
+    compress
+    missingok
+    notifempty
+    sharedscripts
+    postrotate
+            invoke-rc.d rsyslog rotate > /dev/null
+    endscript
+}

@@ -1,0 +1,29 @@
+---
+# Default setting
+firewall_state: started
+firewall_enabled_at_boot: true
+firewall_systemd_name: firewall-varb
+
+firewall_allowed_tcp_ports:
+  - "22"
+  - "80"
+  - "443"
+  - "10050"
+firewall_allowed_udp_ports: []
+
+firewall_log_dropped_packets: false
+# --------------------------------------------------------------
+# You can write ip or network to this massive, like 127.0.0.1 or 127.0.0.1/8
+firewall_allowed_ipv4_adresses: []
+  # - "127.0.0.1"
+  # - "127.0.0.1/8"
+firewall_allowed_ipv6_adresses: []
+
+firewall_allowed_ports_for_ipv6: []
+firewall_allowed_ports_for_ipv4: []
+  # - ip: 127.0.0.1
+  #   port: 228
+  #   protocol: tcp
+
+firewall_ipv4_additional_rules: []
+firewall_ipv6_additional_rules: []

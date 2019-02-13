@@ -1,0 +1,6 @@
+---
+- name: restart firewall
+  systemd: name={{ firewall_systemd_name }} state=restarted
+
+- name: restart rsyslog
+  systemd: name=rsyslog state=restarted

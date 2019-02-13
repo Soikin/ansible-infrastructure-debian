@@ -1,0 +1,52 @@
+---
+- name: Ensure iptables is present.
+  package: name=iptables state=present
+
+- name: Flush iptables the first time playbook runs.
+  command: >
+    iptables -F
+
+- name: Ensures log dir exists.
+  file:
+    path: /var/log/{{ firewall_systemd_name }}
+    state: directory
+
+- name: Copy rsyslog config file into place.
+  template:
+    src: rsyslog-config.j2
+    dest: /etc/rsyslog.d/iptables.conf
+  notify: restart rsyslog
+
+- name: Copy logrotate config.
+  template:
+    src: logrotate.j2
+    dest: "/etc/logrotate.d/{{ firewall_systemd_name }}"
+
+- name: Copy firewall script into place.
+  template:
+    src: firewall.bash.j2
+    dest: /etc/firewall.bash
+    mode: 0744
+    # backup: yes
+  notify: restart firewall
+
+- name: Copy reset-firewall script into place.
+  template:
+    src: reset-firewall.bash.j2
+    dest: /etc/reset-firewall.bash
+    mode: 0744
+  notify: restart firewall
+
+- name: Copy firewall systemd unit file into place (for systemd systems).
+  template:
+    src: firewall.unit.j2
+    dest: /etc/systemd/system/{{ firewall_systemd_name }}.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Configure the firewall service.
+  systemd:
+    name: "{{ firewall_systemd_name }}"
+    state: "{{ firewall_state }}"
+    enabled: "{{ firewall_enabled_at_boot }}"
