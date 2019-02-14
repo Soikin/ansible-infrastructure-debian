@@ -1,0 +1,40 @@
+---
+- name: Add user rocketchat.
+  user:
+    name: rocketchat
+    shell: /sbin/nologin
+    append: yes
+    comment: "rocketchat nologin user"
+    state: present
+
+- name: Ensure graphicsmagick is present.
+  package: name=graphicsmagick state=present
+
+- name: Set node version to 8.11.3.
+  command: "n 8.11.3"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Download and unarchive files.
+  unarchive:
+    owner: rocketchat
+    group: rocketchat
+    src: https://releases.rocket.chat/latest/download
+    dest: /tmp/
+    remote_src: yes
+
+- name: Install packages based on package.json.
+  npm:
+    path: /tmp/bundle/programs/server
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Move files to /opt.
+  command: "mv /tmp/bundle /opt/Rocket.Chat"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Configure the chat service.
+  template:
+    src: rocketchat.service.j2
+    dest: "/lib/systemd/system/{{ chat_daemon }}.service"
+  notify:
+    - chat-boot
+    - chat-start

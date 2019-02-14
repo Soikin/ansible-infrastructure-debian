@@ -1,0 +1,20 @@
+---
+- name: chat-boot
+  systemd:
+    name: "{{ chat_daemon }}"
+    enabled: yes
+
+- name: chat-start
+  systemd:
+    name: "{{ chat_daemon }}"
+    state: started
+
+- name: chat-restart
+  systemd:
+    name: "{{ chat_daemon }}"
+    state: restarted
+
+- name: chat-reload
+  systemd:
+    name: "{{ chat_daemon }}"
+    state: reloaded
