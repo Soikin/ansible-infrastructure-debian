@@ -1,0 +1,66 @@
+---
+#- name: Add project root directory.
+#  file: path="/usr/share/phpmyadmin/" state=directory owner=root group=root mode=0755
+
+#- name: Download and unarchive last source for phpmyadmin (set url in default settings). # ansible v2.0
+#  unarchive:
+#    src: "{{ phpmyadmin_package_url_debian }}"
+#    dest: /usr/share/phpmyadmin/
+#    remote_src: True
+#  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Install service package.
+  apt: name=unzip state=latest update_cache=yes cache_valid_time=7200
+
+- name: Remove old phpmyadmin files.
+  file:
+    state: absent
+    path: /usr/share/phpmyadmin/
+  when: phpmyadmin_clear_install
+
+- name: Check exist default folder to phpmyadmin.
+  stat: path=/usr/share/phpmyadmin/
+  register: phpmyadmin
+
+- name: Download and unarchive last source for phpmyadmin (set url in default settings). # ansible v2.0
+  unarchive:
+    src: "{{ phpmyadmin_package_url_debian }}"
+    dest: /tmp
+    validate_certs: no
+    remote_src: yes
+  when: phpmyadmin.stat.exists == false
+
+- name: Move files from tmp to phpmyadmin.
+  command: creates="/usr/share/phpmyadmin/" mv /tmp/{{ phpmyadmin_package_name }} /usr/share/phpmyadmin
+  when: phpmyadmin.stat.exists == false
+
+- name: Create config files for phpmyadmin.
+  command: chdir="/usr/share/phpmyadmin" cp config.sample.inc.php config.inc.php
+  when: phpmyadmin.stat.exists == false
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Check exist default config to phpmyadmin.
+  stat: path=/usr/share/phpmyadmin/config.inc.php
+  register: phpmyadmin_config
+
+- name: Set some settings on config.inc.php.
+  lineinfile: dest=/usr/share/phpmyadmin/config.inc.php regexp="^{{ item.regex }}" line="{{ item.line }}"
+  with_items:
+   - {regex: "\\$cfg\\[\\'Servers\\'\\]\\[\\$i\\]\\[\\'auth_type\\'\\]", line: "$cfg['Servers'][$i]['auth_type'] = 'http';"}
+  when: phpmyadmin_config.stat.exists
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Create tmp dir for phpmyadmin twig template engine.
+  file:
+    path: /usr/share/phpmyadmin/tmp
+    mode: 0777
+    state: directory
+  when: phpmyadmin.stat.exists == false
+
+- name: Create directory includes for nginx.
+  file: path="/etc/nginx/includes" state=directory mode=0755
+  when: phpmyadmin_nginx_phpfpm_config
+
+- name: Copy phpmyadmin configs for nginx includes.
+  template: src=phpmyadmin.conf.j2 dest=/etc/nginx/includes/phpmyadmin.conf
+  when: phpmyadmin_nginx_phpfpm_config

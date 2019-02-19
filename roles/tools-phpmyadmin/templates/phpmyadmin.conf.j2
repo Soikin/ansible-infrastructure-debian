@@ -1,0 +1,25 @@
+# This file is managed by ansible, don't make changes here - they will be overwritten.
+
+# Nginx include location phpmyadmin
+location /mpma {
+  alias /usr/share/phpmyadmin/;
+  index index.php;
+
+  location ~ /(doc|sql|setup)/ {
+    deny all;
+  }
+
+  location ~ \.php$ {
+    fastcgi_pass unix:{{ php_fpm_config_listen_sock }};
+    fastcgi_index index.php;
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $request_filename;
+    fastcgi_ignore_client_abort off;
+  }
+
+  location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+    access_log     off;
+    log_not_found  off;
+    expires        1M;
+  }
+}
