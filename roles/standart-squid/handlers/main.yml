@@ -1,0 +1,28 @@
+---
+- name: squid-boot
+  systemd:
+    name: "{{ squid_daemon }}"
+    enabled: yes
+
+- name: squid-start
+  systemd:
+    name: "{{ squid_daemon }}"
+    state: started
+
+- name: squid-restart
+  systemd:
+    name: "{{ squid_daemon }}"
+    state: restarted
+
+- name: squid-reconfigure
+  command: "squid -k reconfigure"
+
+- name: apache2-stop
+  systemd:
+    name: apache2
+    state: stopped
+
+- name: apache2-disable
+  systemd:
+    name: apache2
+    enabled: no

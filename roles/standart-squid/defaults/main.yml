@@ -1,0 +1,6 @@
+---
+# Default variables
+squid_daemon: squid
+squid_localnet: 172.17.0.0/16
+squid_dns: 194.158.196.137
+squid_conf_replace: false
