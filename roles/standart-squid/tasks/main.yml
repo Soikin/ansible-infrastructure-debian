@@ -3,3 +3,4 @@
   when: ansible_os_family == 'Debian'
 
 - import_tasks: configure.yml
+- import_tasks: squidanalyzer.yml

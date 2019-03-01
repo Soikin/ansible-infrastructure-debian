@@ -17,12 +17,7 @@
 - name: squid-reconfigure
   command: "squid -k reconfigure"
 
-- name: apache2-stop
+- name: restart nginx
   systemd:
-    name: apache2
-    state: stopped
-
-- name: apache2-disable
-  systemd:
-    name: apache2
-    enabled: no
+    name: nginx
+    state: restarted

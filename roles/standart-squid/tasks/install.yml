@@ -12,14 +12,21 @@
     update_cache: yes
     cache_valid_time: 86400
     state: present
-  notify:
-    - apache2-stop
-    - apache2-disable
 
 - name: Ensures the squid3 build dependencies are installed.
   apt:
     name: squid3
     state: build-dep
+
+- name: apache2-stop
+  systemd:
+    name: apache2
+    state: stopped
+
+- name: apache2-disable
+  systemd:
+    name: apache2
+    enabled: no
 
 - name: Copy deb packages to /tmp.
   copy:
@@ -33,7 +40,6 @@
     - squid-purge_3.5.28-1_amd64
     - squid3_3.5.28-1_all
     - squidclient_3.5.28-1_amd64
-
 
 - name: Install squid deb packages.
   apt:

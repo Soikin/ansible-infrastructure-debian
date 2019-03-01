@@ -38,10 +38,12 @@
   template:
     src: squid.conf.j2
     dest: /etc/squid/squid.conf
-    owner: root
-    group: root
-    mode: 0644
   when: squid_conf_replace
   notify:
     - squid-reconfigure
     - squid-restart
+
+- name: Copy logrotate configuration in place.
+  template:
+    src: logrotate.j2
+    dest: /etc/logrotate.d/squid

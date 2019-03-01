@@ -1,0 +1,17 @@
+---
+- name: Copy .htpasswd file.
+  template:
+    src: htpasswd.j2
+    dest: /etc/nginx/.htpasswd
+
+- name: Create squidanalyzer htdocs directory.
+  file:
+    path: /h/toolset/squidreport
+    state: directory
+    mode: 0755
+
+- name: Copy nginx config for squidanalyzer.
+  template:
+    src: squidanalyzer.conf.j2
+    dest: /etc/nginx/includes/squidanalyzer.conf
+  notify: restart nginx
