@@ -55,10 +55,11 @@
     group: "{{ toolset_system_user }}"
   with_items:
     - { src: "htdocs/index.html", dest: "{{ toolset_web_directory }}/index.html" }
+    - { src: "htdocs/robots.txt", dest: "{{ toolset_web_directory }}/robots.txt" }
+    - { src: "htdocs/401.html", dest: "{{ toolset_web_directory }}/401.html" }
     - { src: "htdocs/index.html", dest: "devpage/index.php" }
     - { src: "htdocs/phpinfo.php", dest: "devpage/phpinfo.php" }
     - { src: "htdocs/maintenance.html", dest: "devpage/maintenance.html" }
-    - { src: "htdocs/robots.txt", dest: "{{ toolset_web_directory }}/robots.txt" }
 
 - name: Create user for project
   user: >
