@@ -2,7 +2,7 @@
 - name: Add user rocketchat.
   user:
     name: rocketchat
-    shell: /sbin/nologin
+    shell: /bin/false
     append: yes
     comment: "rocketchat nologin user"
     state: present

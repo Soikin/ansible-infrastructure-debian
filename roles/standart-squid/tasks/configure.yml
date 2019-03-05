@@ -25,13 +25,22 @@
     - squid-boot
     - squid-start
 
+- name: Create additional config directory.
+  file:
+    path: /etc/squid/ssl
+    state: directory
+    mode: 0755
+
+- name: Creating certificates cache.
+  command: "/usr/lib/squid/ssl_crtd -c -s /etc/squid/ssl/cert_cache"
+
 - name: Copy additional config files.
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: "{{ item.mode }}"
   with_items:
-    - { src: "squidCA.pem", dest: "/etc/squid/squidCA.pem", mode: "0600" }
+    - { src: "squidCA.pem", dest: "/etc/squid/ssl/squidCA.pem", mode: "0600" }
     - { src: "blocked_https.txt", dest: "/etc/squid/blocked_https.txt", mode: "0644" }
 
 - name: Copy squid configuration in place.
@@ -42,6 +51,7 @@
   notify:
     - squid-reconfigure
     - squid-restart
+  tags: conf
 
 - name: Copy logrotate configuration in place.
   template:
