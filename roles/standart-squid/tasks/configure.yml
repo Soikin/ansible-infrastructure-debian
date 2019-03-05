@@ -51,7 +51,6 @@
   notify:
     - squid-reconfigure
     - squid-restart
-  tags: conf
 
 - name: Copy logrotate configuration in place.
   template:
