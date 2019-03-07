@@ -41,25 +41,29 @@
     group: proxy
     recurse: yes
 
-- name: Copy additional config files for mitm configuration.
+- name: Copy additional config files..
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: "{{ item.mode }}"
   with_items:
     - { src: "squidCA.pem", dest: "/etc/squid/ssl/squidCA.pem", mode: "0600" }
-    - { src: "blocked_regexp.txt", dest: "/etc/squid/blocked.txt", mode: "0644" }
+    - { src: "forbidden-en.html", dest: "/usr/share/squid/errors/en/ERR_ACCESS_DENIED", mode: "0644" }
+    - { src: "forbidden-ru.html", dest: "/usr/share/squid/errors/ru/ERR_ACCESS_DENIED", mode: "0644" }
   when: squid_mitm
   tags: squid-config
 
-- name: Copy additional config files for transparent configuration.
+- name: Copy block-list for mitm configuration.
   copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    mode: "{{ item.mode }}"
-  with_items:
-    - { src: "squidCA.pem", dest: "/etc/squid/ssl/squidCA.pem", mode: "0600" }
-    - { src: "blocked.txt", dest: "/etc/squid/blocked.txt", mode: "0644" }
+    src: blocked_regexp.txt
+    dest: /etc/squid/blocked.txt
+  when: squid_mitm
+  tags: squid-config
+
+- name: Copy block-list for transparent configuration.
+  copy:
+    src: blocked.txt
+    dest: /etc/squid/blocked.txt
   when: not squid_mitm
   tags: squid-config
 
