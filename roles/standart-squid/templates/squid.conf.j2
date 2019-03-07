@@ -14,6 +14,9 @@ acl Safe_ports port 591		# filemaker
 acl Safe_ports port 777		# multiling http
 acl CONNECT method CONNECT
 acl SSL method CONNECT
+{% if squid_mitm %}
+acl blocked url_regex "/etc/squid/blocked.txt"
+{% endif %}
 
 dns_nameservers {{ squid_dns }}
 
@@ -21,6 +24,9 @@ http_access deny !Safe_ports
 http_access deny CONNECT !SSL_ports
 http_access allow localhost manager
 http_access deny manager
+{% if squid_mitm %}
+http_access deny blocked
+{% endif %}
 http_access allow localnet
 http_access allow localhost
 http_access deny all
@@ -30,18 +36,18 @@ htcp_access deny all
 http_port 3128 intercept options=NO_SSLv3:NO_SSLv2
 http_port 3130 options=NO_SSLv3:NO_SSLv2
 {% if squid_mitm %}
-https_port 3129 intercept ssl-bump generate-host-certificates=on dynamic_cert_mem_cache_size=16MB  cert=/etc/squid/ssl/squidCA.pem
+https_port 3129 intercept ssl-bump generate-host-certificates=on dynamic_cert_mem_cache_size=16MB cert=/etc/squid/ssl/squidCA.pem
 
 #sslproxy_cert_error allow all
 #sslproxy_flags DONT_VERIFY_PEER
 
-#block domains rule (example: .domain.com)
-acl blocked ssl::server_name  "/etc/squid/blocked_https.txt"
 acl step1 at_step SslBump1
-ssl_bump peek step1
-ssl_bump terminate blocked
+acl step2 at_step SslBump2
+acl step3 at_step SslBump3
 
-ssl_bump bump all
+ssl_bump peek step1
+ssl_bump bump step2 all
+ssl_bump bump step3 all
 {% else %}
 https_port 3129 intercept ssl-bump options=ALL:NO_SSLv3:NO_SSLv2 connection-auth=off cert=/etc/squid/ssl/squidCA.pem
 
@@ -49,7 +55,7 @@ sslproxy_cert_error allow all
 sslproxy_flags DONT_VERIFY_PEER
 
 #block domains rule (example: .domain.com)
-acl blocked ssl::server_name  "/etc/squid/blocked_https.txt"
+acl blocked ssl::server_name  "/etc/squid/blocked.txt"
 acl step1 at_step SslBump1
 ssl_bump peek step1
 ssl_bump terminate blocked
