@@ -1,0 +1,35 @@
+---
+- name: Install utilites.
+  apt:
+    pkg: ['libperl-dev', 'gcc', 'make', 'fcgiwrap', 'spawn-fcgi']
+    update_cache: yes
+    cache_valid_time: 86400
+    state: present
+  notify: fcgiwrap boot
+
+- name: Download source.
+  get_url:
+    url: https://sourceforge.net/projects/abills/files/abills/0.80/abills-0.80.04.tgz
+    dest: /tmp/abills.tgz
+
+- name: Extract source to place.
+  unarchive:
+    src: /tmp/abills.tgz
+    dest: /usr/
+    owner: root
+    group: root
+    remote_src: yes
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Preparation of database structure.
+  replace:
+    path: /usr/abills/db/abills.sql
+    regexp: 'test12345678901234567890'
+    replace: "{{ billing_secret }}"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Create database structure.
+  mysql_db:
+    name: abills
+    state: import
+    target: /usr/abills/db/abills.sql

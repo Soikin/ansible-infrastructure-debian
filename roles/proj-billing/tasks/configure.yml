@@ -1,0 +1,51 @@
+---
+- name: Copy project config.
+  template:
+    src: config.pl.j2
+    dest: /usr/abills/libexec/config.pl
+  tags: test
+
+- name: Install perl modules.
+  command: "perl /usr/abills/misc/perldeps.pl apt-get -batch"
+
+- name: Ensures ssl directory if exist.
+  file:
+    path: /etc/nginx/ssl
+    state: directory
+
+- name: Copy billing.rit certificate.
+  copy:
+    src: "{{ item.src }}"
+    dest: "/etc/nginx/ssl/{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - { src: "billing.rit.crt", dest: "billing.rit.crt", mode: "0644" }
+    - { src: "billing.rit.key", dest: "billing.rit.key", mode: "0600" }
+  notify: reload nginx
+
+- name: Copy nginx project config.
+  template:
+    src: nginx.conf.j2
+    dest: "/etc/nginx/sites-available/1-{{ billing_hostname }}.conf"
+  notify: reload nginx
+  tags: nginx-config
+
+- name: Enable nginx project config.
+  file:
+    src: "/etc/nginx/sites-available/1-{{ billing_hostname }}.conf"
+    dest: "/etc/nginx/sites-enabled/1-{{ billing_hostname }}.conf"
+    state: link
+  ignore_errors: "{{ ansible_check_mode }}"
+  notify: restart nginx
+
+- name: Create cronjobs.
+  cron:
+    name: "{{ item.name }}"
+    user: root
+    minute: "{{ item.minute }}"
+    hour: "{{ item.hour }}"
+    job: "{{ item.job }}"
+  with_items:
+    - { name: "active session controller", minute: "*/5", hour: "*", job: "/usr/abills/libexec/billd -all" }
+    - { name: "daily batch processes", minute: "1", hour: "0", job: "/usr/abills/libexec/periodic daily" }
+    - { name: "monthly periodic processes", minute: "1", hour: "1", job: "/usr/abills/libexec/periodic monthly" }

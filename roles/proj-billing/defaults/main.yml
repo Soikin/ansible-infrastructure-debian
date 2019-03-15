@@ -1,0 +1,4 @@
+---
+billing_hostname: billing.rit
+billing_ssl: true
+billing_secret: ttR4b6xDvclhLbfY
