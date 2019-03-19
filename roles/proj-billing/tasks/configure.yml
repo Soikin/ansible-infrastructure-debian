@@ -49,3 +49,38 @@
     - { name: "active session controller", minute: "*/5", hour: "*", job: "/usr/abills/libexec/billd -all" }
     - { name: "daily batch processes", minute: "1", hour: "0", job: "/usr/abills/libexec/periodic daily" }
     - { name: "monthly periodic processes", minute: "1", hour: "1", job: "/usr/abills/libexec/periodic monthly" }
+
+- name: Setting the required permissions 1.
+  file:
+    path: "{{ item.path }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+    state: "{{ item.state }}"
+  with_items:
+    - { path: "/usr/abills/var/", owner: "root", group: "root", mode: "0755", state: "directory" }
+    - { path: "/usr/abills/var/log", owner: "root", group: "root", mode: "0755", state: "directory" }
+    - { path: "/usr/abills/var/log/abills.log", owner: "root", group: "root", mode: "0644", state: "touch" }
+    - { path: "/usr/abills/cgi-bin/admin/index.cgi", owner: "www-data", group: "www-data", mode: "0755", state: "file" }
+    - { path: "/usr/abills/cgi-bin/index.cgi", owner: "www-data", group: "www-data", mode: "0755", state: "file" }
+
+- name: Setting the required permissions 2.
+  file:
+    path: "{{ item }}"
+    owner: www-data
+    group: www-data
+    state: directory
+    recurse: yes
+  with_items:
+    - /usr/abills/backup
+    - /usr/abills/cgi-bin
+    - /usr/abills/Abills/templates
+
+- name: Add simlinks for creating database backups.
+  file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+  with_items:
+    - { src: "/bin/gzip", dest: "/usr/bin/gzip" }
+    - { src: "/usr/bin/mysqldump", dest: "/usr/local/bin/mysqldump" }
