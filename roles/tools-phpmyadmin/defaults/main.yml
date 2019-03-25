@@ -5,11 +5,6 @@ phpmyadmin_nginx_phpfpm_config: true
 
 # Please replace url for new version phpmyadmin in role install
 
-# Oldest version
-# phpmyadmin_package_name: phpMyAdmin-4.6.5.2-all-languages
-# phpmyadmin_package_url_debian: "https://files.phpmyadmin.net/phpMyAdmin/4.6.5.2/phpMyAdmin-4.6.5.2-all-languages.zip"
-# phpmyadmin_package_checksum: "sha256:81c3f6c3648ceec68d901e674e3bf182e061ddb48f4e5664992d3e09187557c3"
-
-phpmyadmin_package_name: phpMyAdmin-4.8.2-all-languages
-phpmyadmin_package_url_debian: "https://files.phpmyadmin.net/phpMyAdmin/4.8.2/phpMyAdmin-4.8.2-all-languages.zip"
-phpmyadmin_package_checksum: "sha256:e874dbcf01bffbcbd45cf015e73c6fafb5b76ce6ba9b197215448851542d8ed7"
+phpmyadmin_package_name: phpMyAdmin-4.8.5-all-languages
+phpmyadmin_package_url_debian: "https://files.phpmyadmin.net/phpMyAdmin/4.8.5/phpMyAdmin-4.8.5-all-languages.zip"
+phpmyadmin_package_checksum: "sha256:33e6f45d23aa26f95fd33446a4ed48c8a1c1fb09d84b746eed505c85a4d3fef9"
