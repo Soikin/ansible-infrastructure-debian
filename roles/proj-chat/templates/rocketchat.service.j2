@@ -8,6 +8,6 @@ StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=rocketchat
 User=rocketchat
-Environment=MONGO_URL=mongodb://localhost:27017/rocketchat ROOT_URL={{ chat_root_url }} PORT=3000
+Environment=MONGO_URL=mongodb://localhost:27017/rocketchat ROOT_URL={{ chat_root_url }} PORT=3000 BIND_IP=127.0.0.1
 [Install]
 WantedBy=multi-user.target

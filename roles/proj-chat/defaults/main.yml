@@ -1,4 +1,4 @@
 ---
 # Default variables
-chat_root_url: "http://localhost"
+chat_root_url: "https://localhost"
 chat_daemon: rocketchat
