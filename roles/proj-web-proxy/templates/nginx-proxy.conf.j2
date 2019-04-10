@@ -5,7 +5,7 @@
 server {
   listen {{ ansible_default_ipv4.address }}:{{ nginx_default_http_port }};
   server_name {{ item.name }} www.{{ item.name }};
-  return 301 https://$host$request_uri;
+  return 301 https://{{ item.name }}$request_uri;
 }
 {% else %}
 {% endif %}
@@ -18,6 +18,10 @@ server {
   listen {{ ansible_default_ipv4.address }}:{{ nginx_default_http_port }};
   server_name {{ item.name }} www.{{ item.name }};
 {% endif %}
+
+  if ($host = 'www.{{ item.name }}') {
+    return 301 https://{{ item.name }}$request_uri;
+  }
 
   access_log   /var/log/nginx/{{ item.name }}.access.log;
   error_log    /var/log/nginx/{{ item.name }}.error.log;
