@@ -1,0 +1,8 @@
+---
+- name: Copy on VARB Certificate Authority (CA).
+  copy: src=VARB-CA.crt dest=/etc/pki/ca-trust/source/anchors/VARB-CA.crt
+  notify: update ca trust
+
+- name: Run import script.
+  script: import.sh
+  become_user: userrit
