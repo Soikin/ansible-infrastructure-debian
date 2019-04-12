@@ -63,6 +63,7 @@
     - { path: "/usr/abills/var/log/abills.log", owner: "root", group: "root", mode: "0644", state: "touch" }
     - { path: "/usr/abills/cgi-bin/admin/index.cgi", owner: "www-data", group: "www-data", mode: "0755", state: "file" }
     - { path: "/usr/abills/cgi-bin/index.cgi", owner: "www-data", group: "www-data", mode: "0755", state: "file" }
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Setting the required permissions 2.
   file:
@@ -75,6 +76,7 @@
     - /usr/abills/backup
     - /usr/abills/cgi-bin
     - /usr/abills/Abills/templates
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Add simlinks for creating database backups.
   file:
@@ -84,3 +86,4 @@
   with_items:
     - { src: "/bin/gzip", dest: "/usr/bin/gzip" }
     - { src: "/usr/bin/mysqldump", dest: "/usr/local/bin/mysqldump" }
+  ignore_errors: "{{ ansible_check_mode }}"

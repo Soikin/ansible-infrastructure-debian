@@ -33,3 +33,4 @@
     name: abills
     state: import
     target: /usr/abills/db/abills.sql
+  ignore_errors: "{{ ansible_check_mode }}"
