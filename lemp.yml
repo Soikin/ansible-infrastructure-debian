@@ -1,0 +1,86 @@
+---
+- hosts: 172.17.110.61
+  vars:
+    setting_environment: prod
+    # standart-common
+    install_updates: true
+    upgrade_packages: true
+    install_utilites: true
+    update_init: true
+    create_users: true
+    user_list_deploy: "soikin"
+    change_local_hostname: false
+    #update_security: true
+    # standart-nginx
+    nginx_repo_use: true
+    nginx_default_conf_replace: true
+    nginx_default_vhost_delete: true
+    nginx_conf_enable_gzip: true
+    nginx_static_enable_optimization: true
+    nginx_default_http_port: 80
+    # nginx_default_https_port: 443
+    # tools-toolset
+    toolset_ip_listen_enable: true
+    toolset_web_hostname: project.toolset.rit
+    toolset_copy_nginx_config: true
+    # standart-mysql
+    mysql_delete_before_installation: true
+    mysql_package_repo_enable: true
+    mysql_package_repo_version: 5.7
+    mysql_root_password: Qk6VRahbhsd45HbddGL
+    mysql_create_databases: true
+    mysql_create_users: true
+    mysql_databases:
+      - name: project1
+        collation: utf8_general_ci
+        encoding: utf8
+      - name: project2
+        collation: utf8_general_ci
+        encoding: utf8
+    mysql_users:
+      - name: project1
+        host: localhost
+        password: q32X6CxLX8Kascdfdsf3yh
+        priv: "project1.*:ALL"
+      - name: project2
+        host: localhost
+        password: x4QsyyZQaZsdfIHU7
+        priv: "project2.*:ALL"
+    # standart-php
+    php_default_version: 7.2
+    php_default_conf_replace: true
+    php_install_fpm_package: true
+    php_install_project_packages: true
+    php_list_project_packages:
+      - php{{ php_default_version }}-mysql
+      - php-memcache
+    # tools-phpmyadmin
+    phpmyadmin_nginx_phpfpm_config: true
+    # proj-lemp vars
+    project_deploy: true
+    project_users:
+      - name: project
+        shell: /bin/bash  # default shell if not set
+        home: /h/project
+    project_lemp_sites_list:
+      - name: project1.rit
+        user: project
+        htdocs: htdocs-project1
+        ssl: false
+      - name: project2.rit
+        user: project
+        htdocs: htdocs-project2
+        ssl: false
+    # tools-zabbix-agent
+    # zabbix_server_ip: '172.17.110.250'
+  become: yes
+  become_user: root
+  roles:
+     - { role: standart-common }
+     - { role: standart-nginx }
+     - { role: tools-toolset }
+     - { role: standart-mysql }
+     - { role: standart-php }
+     - { role: tools-phpmyadmin }
+     - { role: proj-lemp }
+    #  - { role: ../ansible-infrastructure/roles/tools-zabbix-agent }

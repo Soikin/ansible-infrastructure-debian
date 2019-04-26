@@ -1,0 +1,48 @@
+---
+- hosts: chat.rit
+  vars:
+    setting_environment: prod
+    # standart-common
+    install_updates: true
+    upgrade_packages: true
+    install_utilites: true
+    update_init: true
+    create_users: true
+    user_list_deploy: "soikin"
+    change_local_hostname: false
+    # standart-mongodb
+    mongodb_package_install_version: 3.6
+    mongodb_default_conf_replace: false
+    # standart-nodejs
+    nodejs_version: "8.x"
+    nodejs_npm_version: "latest"
+    nodejs_npm_local_packages: []
+    nodejs_npm_global_packages:
+      - inherits
+      - n
+    # standart-nginx
+    nginx_repo_use: true
+    nginx_default_conf_replace: true
+    nginx_default_vhost_delete: true
+    nginx_conf_enable_gzip: true
+    nginx_static_enable_optimization: true
+    nginx_default_http_port: 80
+    nginx_default_https_port: 443
+    # proj-web-proxy
+    project_deploy_to_proxy_host: true
+    project_web_proxy_sites_list:
+    - name: "chat.rit"
+      proxy_ip: 127.0.0.1
+      proxy_port: 3000
+      ssl: true
+    # proj-chat
+    chat_root_url: "https://chat.rit"
+  become: yes
+  become_user: root
+  roles:
+     - { role: standart-common }
+     - { role: standart-mongodb }
+     - { role: standart-nodejs }
+     - { role: standart-nginx }
+     - { role: proj-web-proxy }
+     - { role: proj-chat }
