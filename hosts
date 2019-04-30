@@ -18,6 +18,7 @@
 
 [servers]
 git.rit   ansible_host=172.17.110.249
+cloud.rit ansible_host=172.17.110.251
 chat.rit  ansible_host=172.17.110.252
 rit.va    ansible_host=172.17.110.254
 
