@@ -20,32 +20,28 @@
 # Install default PHP packages
 - name: "Install default php{{ php_default_version }} minimum packages."
   apt:
-    name: "{{ item }}"
+    name: "{{ php_list_default_packages }}"
     state: present
-  with_items: "{{ php_list_default_packages }}"
   when: php_install_default_packages and php_list_default_packages is defined
 
 - name: "Install additional default php{{ php_default_version }} packages."
   apt:
-    name: "{{ item }}"
+    name: "{{ php_list_additional_packages }}"
     state: present
-  with_items: "{{ php_list_additional_packages }}"
   when: php_install_additional_packages and php_list_additional_packages is defined
 
 - name: "Install additional project php{{ php_default_version }} packages."
   apt:
-    name: "{{ item }}"
+    name: "{{ php_list_project_packages }}"
     state: present
     install_recommends: no
-  with_items: "{{ php_list_project_packages }}"
   when: php_install_project_packages and php_list_project_packages is defined
 
 # Install force PHP packages
 - name: "Force install php{{ php_default_version }} packages."
   apt:
-    name: "{{ item }}"
+    name: "{{ php_list_force_packages }}"
     state: present
-  with_items: "{{ php_list_force_packages }}"
   when: php_install_force_packages and php_list_force_packages is defined
 
 # Install php-fpm package

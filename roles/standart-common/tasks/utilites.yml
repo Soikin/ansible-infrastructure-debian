@@ -1,31 +1,6 @@
 ---
 - name: Install standart utilites
-  apt: pkg={{ item }} update_cache=yes cache_valid_time=86400 state=present
-  with_items:
-    - aptitude
-    - bash-completion
-    - curl
-    - dnsutils
-    - git
-    - htop
-    - iftop
-    - iotop
-    - iptraf
-    - mc
-    - nano
-    - ntp
-    - ncdu
-    - nmap
-    - nmon
-    - psmisc
-    - rsync
-    - screen
-    - sysstat
-    - unzip
-    - vim
-    - sudo
-    - net-tools
-    - openssl
+  apt: pkg={{ standart_utilites }} update_cache=yes cache_valid_time=86400 state=present
   tags: utilites
 
 - name: Install extra utilites

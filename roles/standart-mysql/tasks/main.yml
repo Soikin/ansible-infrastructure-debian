@@ -26,7 +26,4 @@
   tags: mysql_db_and_user
   ignore_errors: "{{ ansible_check_mode }}"
 
-# Update general configs
-- import_tasks: configs.yml
-  when: mysql_default_conf_replace
 - meta: flush_handlers

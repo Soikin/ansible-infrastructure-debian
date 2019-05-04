@@ -7,8 +7,7 @@
   apt: update_cache=yes
 
 - name: Ensure MySQL packages are installed latest version.
-  apt: "name={{ item }} state=latest"
-  with_items: "{{ mysql_packages }}"
+  apt: "name={{ mysql_packages }} state=latest"
 
 - name: Ensure MySQL Python libraries are installed.
   apt: "name=python-mysqldb update_cache=yes state=present install_recommends=yes" # ?? add install_recommends=no for mysql 5.6

@@ -31,3 +31,29 @@ users:
  # - name: man
  #   shell: /bin/bash
  #   ssh_key: files/public-ssh-key/man.pub
+
+standart_utilites:
+  - aptitude
+  - bash-completion
+  - curl
+  - dnsutils
+  - git
+  - htop
+  - iftop
+  - iotop
+  - iptraf
+  - mc
+  - nano
+  - ntp
+  - ncdu
+  - nmap
+  - nmon
+  - psmisc
+  - rsync
+  - screen
+  - sysstat
+  - unzip
+  - vim
+  - sudo
+  - net-tools
+  - openssl

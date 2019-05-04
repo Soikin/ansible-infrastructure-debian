@@ -19,8 +19,7 @@
 #   debconf: name='mysql-server' question='mysql-server/root_password_again' value='{{ mysql_root_pass | quote }}' vtype='password'
 
 - name: Ensure MySQL packages are installed.
-  apt: "name={{ item }} state=present"
-  with_items: "{{ mysql_packages }}"
+  apt: "name={{ mysql_packages }} state=present"
 
 - name: Ensure MySQL Python libraries are installed.
   apt: "name=python-mysqldb update_cache=yes state=present install_recommends=yes" # ?? add install_recommends=no for mysql 5.6
