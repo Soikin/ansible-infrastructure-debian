@@ -25,6 +25,7 @@
     - { name: ".ssh", mode: "0755" }
     - { name: "backups", mode: "0775" }
     - { name: "devpage", mode: "0775" }
+    - { name: "scripts", mode: "0775" }
 
 # - name: Copy the ssh key user.
 #   copy: >
