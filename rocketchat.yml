@@ -37,10 +37,12 @@
       ssl: true
     # proj-chat
     chat_root_url: "https://chat.rit"
+    chat_version: 0.74.3
   become: yes
   become_user: root
   roles:
      - { role: standart-common }
+     - { role: tools-toolset }
      - { role: standart-mongodb }
      - { role: standart-nodejs }
      - { role: standart-nginx }

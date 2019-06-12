@@ -1,4 +1,7 @@
 ---
 # Default variables
+chat_version: latest
+chat_node_version: 8.11.3
 chat_root_url: "https://localhost"
 chat_daemon: rocketchat
+chat_source: "https://releases.rocket.chat/{{ chat_version }}/download"
