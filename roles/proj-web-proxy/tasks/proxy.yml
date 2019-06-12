@@ -1,4 +1,9 @@
 ---
+- name: Creates tls directory.
+  file:
+    path: /etc/nginx/tls
+    state: directory
+
 - name: Copy nginx project web-proxy configs.
   template: src=nginx-proxy.conf.j2 dest=/etc/nginx/sites-available/1-{{ item.name }}.conf
   with_items: "{{ project_web_proxy_sites_list }}"
