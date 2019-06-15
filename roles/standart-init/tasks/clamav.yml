@@ -1,55 +1,56 @@
 ---
 # https://www.transip.eu/knowledgebase/entry/700-installing-clamav-in-centos7/
-
-- name: install epel-release
+- name: clamav | install epel-release
   package:
     name: epel-release
     state: present
 
-- name: install clamav
+- name: clamav | install clamav
   package:
     name: [clamav-server, clamav-data, clamav-update, clamav-filesystem, clamav, clamav-scanner-systemd, clamav-devel, clamav-lib, clamav-server-systemd]
     state: present
 
-- name: Configure selinux 1.
+- name: clamav | Configure selinux 1.
   command: setsebool -P antivirus_can_scan_system 1
+  ignore_errors: yes
 
-- name: Configure selinux 2.
+- name: clamav | Configure selinux 2.
   command: setsebool -P clamd_use_jit 1
+  ignore_errors: yes
 
-- name: Configure 1.
+- name: clamav | Configure 1.
   lineinfile:
     regexp: '^Example'
     line: "#Example"
     dest: /etc/freshclam.conf
 
-- name: Configure 2.
+- name: clamav | Configure 2.
   lineinfile:
     regexp: '^Example'
     line: "#Example"
     dest: /etc/clamd.d/scan.conf
 
-- name: Configure 3.
+- name: clamav | Configure 3.
   lineinfile:
     regexp: '#LocalSocket /var/run/clamd.scan/clamd.sock'
     line: "LocalSocket /var/run/clamd.scan/clamd.sock"
     dest: /etc/clamd.d/scan.conf
 
-- name: Run freshclam.
+- name: clamav | Run freshclam.
   command: freshclam
 
-- name: Configure systemd service.
+- name: clamav | Configure systemd service.
   template:
     src: freshclam.service
     dest: /usr/lib/systemd/system/freshclam.service
 
-- name: Start clamd@scan
+- name: clamav | Start clamd@scan
   systemd:
     name: clamd@scan
     state: started
     enabled: yes
 
-- name: Start freshclam
+- name: clamav | Start freshclam
   systemd:
     name: freshclam
     state: started

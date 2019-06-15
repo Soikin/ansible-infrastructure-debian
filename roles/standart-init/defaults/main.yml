@@ -1,3 +1,4 @@
 ---
 init_certs: false
 init_clamav: false
+init_usbguard: false

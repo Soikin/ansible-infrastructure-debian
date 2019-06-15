@@ -3,6 +3,7 @@
   vars:
     init_certs: false
     init_clamav: false
+    init_usbguard: false
   become: yes
   become_user: root
   roles:
