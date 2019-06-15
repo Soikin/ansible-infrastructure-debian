@@ -1,0 +1,20 @@
+---
+- name: Add google chrome repo file.
+  template:
+    src: "google-chrome.repo.j2"
+    dest: "/etc/yum.repos.d/google-chrome.repo"
+  tags: resolv.conf
+
+- name: Install google-chrome-stable package.
+  package:
+    name: google-chrome-stable
+    state: present
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Copy on VARB Certificate Authority (CA).
+  copy: src=VARB-CA.crt dest=/etc/pki/ca-trust/source/anchors/VARB-CA.crt
+  notify: update ca trust
+
+- name: Run import script.
+  script: import.sh
+  become_user: userrit

@@ -1,0 +1,56 @@
+---
+# https://www.transip.eu/knowledgebase/entry/700-installing-clamav-in-centos7/
+
+- name: install epel-release
+  package:
+    name: epel-release
+    state: present
+
+- name: install clamav
+  package:
+    name: [clamav-server, clamav-data, clamav-update, clamav-filesystem, clamav, clamav-scanner-systemd, clamav-devel, clamav-lib, clamav-server-systemd]
+    state: present
+
+- name: Configure selinux 1.
+  command: setsebool -P antivirus_can_scan_system 1
+
+- name: Configure selinux 2.
+  command: setsebool -P clamd_use_jit 1
+
+- name: Configure 1.
+  lineinfile:
+    regexp: '^Example'
+    line: "#Example"
+    dest: /etc/freshclam.conf
+
+- name: Configure 2.
+  lineinfile:
+    regexp: '^Example'
+    line: "#Example"
+    dest: /etc/clamd.d/scan.conf
+
+- name: Configure 3.
+  lineinfile:
+    regexp: '#LocalSocket /var/run/clamd.scan/clamd.sock'
+    line: "LocalSocket /var/run/clamd.scan/clamd.sock"
+    dest: /etc/clamd.d/scan.conf
+
+- name: Run freshclam.
+  command: freshclam
+
+- name: Configure systemd service.
+  template:
+    src: freshclam.service
+    dest: /usr/lib/systemd/system/freshclam.service
+
+- name: Start clamd@scan
+  systemd:
+    name: clamd@scan
+    state: started
+    enabled: yes
+
+- name: Start freshclam
+  systemd:
+    name: freshclam
+    state: started
+    enabled: yes

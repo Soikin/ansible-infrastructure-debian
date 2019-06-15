@@ -1,6 +1,8 @@
 ---
 - hosts: all
   vars:
+    init_certs: false
+    init_clamav: false
   become: yes
   become_user: root
   roles:
