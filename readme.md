@@ -190,6 +190,8 @@ toolset_copy_apache_config: boolean # default false
 toolset_multi_nginx_apache: boolean # default false
 toolset_web_hostname:       ""      # require, default is inventory_hostname
 toolset_web_hostname_alias: ""      # optional, default not set
+#toolset_additional_hostname: ""   # not working
+#toolset_additional_include: []    # not working
 toolset_nginx_user:         ""      # default toolset_system_user
 nginx_default_http_port:        ""      # require, default not set
 nginx_default_https_port:       ""      # require, default not set
