@@ -1,6 +1,6 @@
 # This file is managed by ansible, don't make changes here - they will be overwritten.
 # Nginx auto generate template for proxy
-{% if item.ssl %}
+{% if item.tls %}
 
 server {
   listen {{ ansible_default_ipv4.address }}:{{ nginx_default_http_port }};
@@ -11,7 +11,7 @@ server {
 {% endif %}
 
 server {
-{% if item.ssl %}
+{% if item.tls %}
   listen {{ ansible_default_ipv4.address }}:{{ nginx_default_https_port }} ssl;
   server_name {{ item.name }} www.{{ item.name }};
 {% else %}
@@ -48,7 +48,7 @@ server {
     rewrite ^(.*)$ /maintenance.html break;
   }
 
-{% if item.ssl %}
+{% if item.tls %}
   # SSL
   ssl_certificate      /etc/nginx/tls/{{ item.name }}.crt;
   ssl_certificate_key  /etc/nginx/tls/{{ item.name }}.key;

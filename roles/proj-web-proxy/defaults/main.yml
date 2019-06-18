@@ -8,4 +8,4 @@ project_web_proxy_sites_list: []
   # - name: my-site.va
   #   proxy_ip: 10.10.0.1
   #   proxy_port: 80
-  #   ssl: true
+  #   tls: true
