@@ -1,0 +1,49 @@
+---
+- name: deploy | Copy chat.rit certificate.
+  copy:
+    src: "{{ item.src }}"
+    dest: "/etc/nginx/tls/{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - { src: "tls/chat.rit.crt", dest: "chat.rit.crt", mode: "0644" }
+    - { src: "tls/chat.rit.key", dest: "chat.rit.key", mode: "0600" }
+
+- name: deploy | Add user rocketchat.
+  user:
+    name: rocketchat
+    shell: /bin/false
+    append: yes
+    comment: "rocketchat nologin user"
+    state: present
+
+- name: deploy | Ensure graphicsmagick is present.
+  package: name=graphicsmagick state=present
+
+- name: "deploy | Set node version to {{ chat_node_version }}."
+  command: "n {{ chat_node_version }}"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: deploy | Download and unarchive files.
+  unarchive:
+    owner: rocketchat
+    group: rocketchat
+    src: "{{ chat_source }}"
+    dest: /tmp/
+    remote_src: yes
+
+- name: deploy | Install packages based on package.json.
+  npm:
+    path: /tmp/bundle/programs/server
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: deploy | Move files to /opt.
+  command: "mv /tmp/bundle /opt/Rocket.Chat"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: deploy | Configure the chat service.
+  template:
+    src: rocketchat.service.j2
+    dest: "/lib/systemd/system/{{ chat_daemon }}.service"
+  notify:
+    - chat-boot
+    - chat-start

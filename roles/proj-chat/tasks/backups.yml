@@ -1,0 +1,19 @@
+---
+- name: backups | Copy backup scripts to folder.
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: toolset
+    group: toolset
+    mode: "{{ item.mode }}"
+  with_items:
+    - { src: "scripts/mongo_backup.sh", dest: "/h/toolset/scripts/mongo_backup.sh", mode: "0755"  }
+    - { src: "scripts/mongo_restore.sh", dest: "/h/toolset/scripts/mongo_restore.sh", mode: "0755"  }
+
+- name: backups | Add cronjob.
+  cron:
+    name: "Daily mongo backups"
+    minute: 30
+    hour: 1
+    user: toolset
+    job: "/h/toolset/scripts/mongo_backup.sh > /h/toolset/scripts/mongo_backup.log 2>&1"
