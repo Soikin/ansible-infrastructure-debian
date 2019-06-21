@@ -1,10 +1,5 @@
 ---
 # https://www.transip.eu/knowledgebase/entry/700-installing-clamav-in-centos7/
-- name: clamav | install epel-release
-  package:
-    name: epel-release
-    state: present
-
 - name: clamav | install clamav
   package:
     name: [clamav-server, clamav-data, clamav-update, clamav-filesystem, clamav, clamav-scanner-systemd, clamav-devel, clamav-lib, clamav-server-systemd]

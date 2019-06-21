@@ -1,4 +1,6 @@
 ---
-init_certs: false
+init_default: false
 init_clamav: false
 init_usbguard: false
+init_domain: false
+init_domin_admin_password: "QAZwsx123!"

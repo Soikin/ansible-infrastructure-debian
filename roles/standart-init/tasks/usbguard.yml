@@ -23,4 +23,4 @@
   copy:
     src: usb-ipc-manager.sh
     dest: /root/usb-ipc/usb-ipc-manager.sh
-    mode: 755
+    mode: 0755

@@ -1,9 +1,10 @@
 ---
 - hosts: all
   vars:
-    init_certs: false
+    init_default: false
     init_clamav: false
     init_usbguard: false
+    init_domain: false
   become: yes
   become_user: root
   roles:
