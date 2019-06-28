@@ -13,6 +13,12 @@ An Ansible Role on Debian/Ubuntu.
 * [TroubleShooting](#troubleshooting)
 * [License](#license)
 
+### Requirements
+Install required packages and some utilities with deploy keys to the work ansible.
+```sh
+wget --no-check-certificate https://rit.va/d9-init.sh && chmod +x d9-init.sh && ./d9-init.sh && rm -f d9-init.sh
+```
+
 ### Roles
 * [standart-common](#standart-common)
 * [standart-firewall](#standart-firewall)
@@ -176,6 +182,13 @@ phpmyadmin_nginx_phpfpm_config: boolean # default true
 phpmyadmin_package_name:        ""      # default is set (name of zip archive)
 phpmyadmin_package_checksum:    ""      # default is set (checksum of zip archive)
 phpmyadmin_package_url_debian:  "URL"   # default is set
+```
+* tools-zabbix-agent
+```yml
+zabbix_server_ip:           ""      # default, 172.17.110.250
+zabbix_version:             ""      # default 4.2
+zabbix_agent_hostname:      ""      # default ansible_fqdn
+zabbix_agent_clear_install: boolean # default false
 ```
 * tools-toolset
 ```yml

@@ -51,3 +51,4 @@
      - { role: standart-nginx }
      - { role: proj-web-proxy }
      - { role: proj-chat }
+     - { role: tools-zabbix-agent }

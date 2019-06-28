@@ -23,6 +23,7 @@
   with_items:
     - {regexp: "^use_fully_qualified_names = ", line: "use_fully_qualified_names = False"}
     - {regexp: "^fallback_homedir = ", line: "fallback_homedir = /home/%u"}
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: domain | Allow domain users to create home directories.
   command: /usr/sbin/authconfig --enablemkhomedir --enablesssdauth --updateall
