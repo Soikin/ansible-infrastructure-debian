@@ -4,8 +4,7 @@
 172.17.110.12
 
 [class]
-172.17.110.[13:54]
-172.17.110.[56:57]
+172.17.110.[13:57]
 
 [class2]
 172.17.110.[1:9]
@@ -14,10 +13,12 @@
 #172.17.110.44 #windows 10 Марьянков
 
 [servers]
-git.rit   ansible_host=172.17.110.249
-cloud.rit ansible_host=172.17.110.251
-chat.rit  ansible_host=172.17.110.252
-rit.va    ansible_host=172.17.110.254
+git.rit    ansible_host=172.17.110.249
+cloud.rit  ansible_host=172.17.110.251
+chat.rit   ansible_host=172.17.110.252
+rit.va     ansible_host=172.17.110.254
+docker.rit ansible_host=172.17.110.247
+zabbix.rit ansible_host=172.17.110.250
 
 [servers:vars]
 ansible_user=ansible
