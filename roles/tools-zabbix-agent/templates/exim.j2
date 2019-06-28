@@ -1,0 +1,9 @@
+UserParameter=exim.version, exim -bV | head -1 | cut -d " " -f 3
+UserParameter=mailqueue-exim,sudo exim -bpc
+UserParameter=mailfreeze-exim,sudo exim -bpr | grep frozen | wc -l
+
+# Disable. It needs some work.
+UserParameter=mailqueue-exim-gmail,sudo exiqgrep -r gmail.com
+UserParameter=mailqueue-exim-mailru,sudo exiqgrep -r mail.ru
+UserParameter=mailqueue-exim-rambler,sudo exiqgrep -r rambler.ru
+UserParameter=mailqueue-exim-yandex,sudo exiqgrep -r yandex.ru

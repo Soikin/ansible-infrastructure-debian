@@ -1,0 +1,56 @@
+---
+- name: Remove oldest zabbix agent.
+  apt: pkg={{ item }} state=absent purge=yes
+  with_items:
+    - zabbix-agent
+  when: zabbix_agent_clear_install
+
+- name: Install official Zabbix repository key.
+  apt_key: url=http://repo.zabbix.com/zabbix-official-repo.key
+  when: ansible_os_family == 'Debian'
+
+- name: Installing deb repository Debian.
+  apt_repository:
+    repo: "deb http://repo.zabbix.com/zabbix/{{ zabbix_version }}/debian/ {{ ansible_distribution_release }} main"
+    state: present
+  when: ansible_distribution == "Debian"
+
+- name: Installing deb repository Ubuntu.
+  apt_repository:
+    repo: "deb http://repo.zabbix.com/zabbix/{{ zabbix_version }}/ubuntu/ {{ ansible_distribution_release }} main"
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install zabbix agent.
+  apt: pkg={{ item }} update_cache=yes cache_valid_time=86400 state=present
+  with_items:
+    - zabbix-agent
+  notify: start zabbix-agent
+
+- name: Copy zabbix agent config file.
+  template: src={{item.src}} dest={{item.dest}}
+  with_items:
+    - { src: 'conf.j2', dest: '/etc/zabbix/zabbix_agentd.d/agent.conf' }
+  notify: restart zabbix-agent
+
+# - name: Copy custom scripts.
+#   copy: >
+#     src={{ item.src }}
+#     dest={{ item.dest }}
+#     owner=root
+#     group=root
+#     mode={{ item.mode }}
+#   with_items:
+#     - { src: "lld-disks.py", dest: "/usr/local/bin/lld-disks.py", mode: "0755" }
+
+# - name: Copy zabbix agent additional config file.
+#   template: src={{item.src}} dest={{item.dest}}
+#   with_items:
+#     - { src: 'exim.j2', dest: '/etc/zabbix/zabbix_agentd.d/exim.conf' }
+#     - { src: 'disk.j2', dest: '/etc/zabbix/zabbix_agentd.d/diskstats.conf' }
+#     - { src: 'proxmox.j2', dest: '/etc/zabbix/zabbix_agentd.d/proxmox_container.conf' }
+#     - { src: 'sudoers.j2', dest: '/etc/sudoers.d/zabbix' }
+#   notify: restart zabbix-agent
+
+- name: Make sure the zabbix-agent start on boot. # fixed for debian 8
+  service: name=zabbix-agent enabled=yes use=service

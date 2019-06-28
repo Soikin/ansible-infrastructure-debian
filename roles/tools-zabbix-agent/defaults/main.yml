@@ -1,0 +1,8 @@
+---
+# General
+zabbix_version: 4.2
+zabbix_agent_clear_install: false
+zabbix_agent_hostname: "{{ inventory_hostname }}"
+zabbix_agent_hostname_fqdn: "{{ ansible_fqdn }}"
+zabbix_server_ip: 172.17.110.250
+zabbix_timeout_agent: 5
