@@ -21,7 +21,7 @@
 - name: Change hostname of VM (check mode is not working).
   hostname: name="{{ new_local_hostname }}"
   register: hostname
-  when: new_local_hostname is defined and change_local_hostname
+  when: new_local_hostname is defined and change_local_hostname == 'true'
 
 - name: Include tasks for change hostname.
   import_tasks: init_host.yml
@@ -46,4 +46,4 @@
     key: "{{ lookup('file', 'files/ansible-ssh-key/ansible.id_rsa.pub') }}"
     exclusive: yes # leave only one public key
   ignore_errors: "{{ ansible_check_mode }}"
-  when: update_ansible_key
+  when: update_ansible_key == true

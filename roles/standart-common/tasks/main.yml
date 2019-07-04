@@ -5,25 +5,25 @@
 
 - name: R00
   import_tasks: update.yml
-  when: install_updates
+  when: install_updates == false
   tags: update
 
 - name: R01
   import_tasks: utilites.yml
-  when: install_utilites
+  when: install_utilites == true
   tags: utilites
 
 - name: R02
   import_tasks: users.yml
-  when: create_users
+  when: create_users == true
   tags: users
 
 - name: R03
   import_tasks: init.yml
-  when: update_init
+  when: update_init == true
   tags: init
 
 - name: R04
   import_tasks: security.yml
-  when: update_security
+  when: update_security == true
   tags: security

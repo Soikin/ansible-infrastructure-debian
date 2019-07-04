@@ -4,4 +4,4 @@
 
 - name: Upgrade apt cache
   apt: upgrade=yes
-  when: upgrade_packages
+  when: upgrade_packages == true

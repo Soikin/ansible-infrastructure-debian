@@ -17,4 +17,4 @@
 
 - name: Add users to sudo group without password.
   import_tasks: sudo.yml
-  when: setting_environment == 'dev' or user_force_add_sudo
+  when: setting_environment == 'dev' or user_force_add_sudo == 'true'
