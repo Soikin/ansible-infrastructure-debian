@@ -1,0 +1,34 @@
+---
+- name: Create a directories for grafana it does not exist.
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: '0755'
+  with_items:
+    - { path: "/h/toolset/grafana", owner: "toolset", group: "toolset" }
+    - { path: "/h/toolset/grafana/etc", owner: "472", group: "472" }
+    - { path: "/h/toolset/grafana/lib", owner: "472", group: "472" }
+    - { path: "/h/toolset/grafana/log", owner: "472", group: "472" }
+
+- name: Copy grafana config
+  template:
+    src: grafana/grafana.ini.j2
+    dest: /h/toolset/grafana/etc/grafana.ini
+    owner: 472
+    group: 472
+    mode: 0644
+
+- name: Create a grafana container.
+  docker_container:
+    name: grafana
+    image: grafana/grafana
+    networks:
+      - name: "default_network"
+    user: "472"
+    restart_policy: unless-stopped
+    volumes:
+      - /h/toolset/grafana/etc:/etc/grafana
+      - /h/toolset/grafana/lib:/var/lib/grafana
+      - /h/toolset/grafana/log:/var/log/grafana

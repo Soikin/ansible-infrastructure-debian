@@ -1,0 +1,21 @@
+---
+- hosts: docker.rit
+  vars:
+    setting_environment: prod
+    # standart-common
+    install_updates: true
+    upgrade_packages: true
+    install_utilites: true
+    update_init: true
+    change_local_hostname: false
+    # proj-docker.rit
+    docker_rit_deploy_grafana: true
+    docker_rit_deploy_nginx: true
+  become: yes
+  become_user: root
+  roles:
+     - { role: standart-common }
+     - { role: tools-toolset }
+     - { role: tools-docker }
+     - { role: proj-docker.rit }
+     - { role: tools-zabbix-agent }

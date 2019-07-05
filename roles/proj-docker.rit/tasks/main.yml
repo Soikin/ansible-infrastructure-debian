@@ -1,0 +1,24 @@
+---
+- name: Create a .ssh directory for root.
+  file:
+    path: /root/.ssh
+    state: directory
+
+- name: Ensures ssh keys exists for project user.
+  copy: >
+    src={{ item.src }}
+    dest={{ item.dest }}
+    mode={{ item.mode }}
+  with_items:
+    - { src: "ssh/id_rsa", dest: "/root/.ssh/id_rsa", mode: "0600" }
+    - { src: "ssh/id_rsa.pub", dest: "/root/.ssh/id_rsa.pub", mode: "0640" }
+
+- name: Create a default network.
+  docker_network:
+    name: default_network
+
+- import_tasks: grafana.yml
+  when: docker_rit_deploy_grafana == true
+
+- import_tasks: nginx.yml
+  when: docker_rit_deploy_nginx == true

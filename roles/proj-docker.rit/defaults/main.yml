@@ -1,0 +1,12 @@
+---
+docker_rit_deploy_grafana: false
+docker_rit_deploy_nginx: false
+
+# Nginx config parameters
+nginx_conf_enable_gzip: true
+nginx_static_enable_optimization: true
+
+nginx_conf_user: nginx
+nginx_conf_worker_processes: auto
+nginx_conf_worker_connections: 1024
+nginx_conf_keepalive_timeout: 65
