@@ -1,0 +1,16 @@
+---
+# Default variables
+docker_package: docker-ce
+# Use this last stable version for kernel 3.*
+# docker_version: 17.09.1-ce-0~debian
+
+docker_compose_install: true
+docker_compose_version: 1.24.1
+docker_compose_checksum: "sha256:cfb3439956216b1248308141f7193776fcf4b9c9b49cbbe2fb07885678e2bb8a"
+
+docker_list_users_to_group:
+  - toolset
+
+# Default variables for docker daemon ()
+docker_log_max_size: 100m
+docker_log_max_files: 5

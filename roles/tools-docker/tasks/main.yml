@@ -1,0 +1,6 @@
+---
+- import_tasks: docker.yml
+  when: ansible_os_family == 'Debian'
+
+- import_tasks: configure.yml
+  when: ansible_os_family == 'Debian'

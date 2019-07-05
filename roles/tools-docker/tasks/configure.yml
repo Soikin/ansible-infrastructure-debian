@@ -1,0 +1,33 @@
+---
+- name: Adding user to group docker.
+  user: name={{ item }} groups=docker append=yes
+  with_items: "{{ docker_list_users_to_group }}"
+  when: docker_list_users_to_group is defined
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Copy general docker daemon config.
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+  notify: restart docker
+
+- name: Check if user toolset is present.
+  stat: path=/h/toolset
+  register: user_toolset
+
+- name: Create docker project systemctl service for toolset.
+  template:
+    src: docker@.service
+    dest: /lib/systemd/system/docker@.service
+    mode: 0644
+  when: user_toolset is defined and user_toolset.stat.exists
+  notify: daemon reload
+
+- name: Copy bash script service for toolset.
+  template:
+    src: docker-systemd.sh
+    dest: /h/toolset/docker-systemd.sh
+    owner: toolset
+    group: toolset
+    mode: 0755
+  when: user_toolset is defined and user_toolset.stat.exists

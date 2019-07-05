@@ -1,0 +1,19 @@
+[Unit]
+Description=Docker Container Project %i
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+RestartSec=10s
+
+User=toolset
+Group=toolset
+WorkingDirectory=/h/toolset/%i
+
+ExecStart=/usr/local/bin/docker-compose -f /h/toolset/%i/docker-compose.yml up
+ExecStop=/usr/local/bin/docker-compose -f /h/toolset/%i/docker-compose.yml stop
+
+[Install]
+WantedBy=multi-user.target

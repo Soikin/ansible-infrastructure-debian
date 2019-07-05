@@ -1,0 +1,40 @@
+---
+# - name: Ensure additional packages is installed. # ? check
+#   apt: name={{ item }} state=present
+#   ignore_errors: "{{ ansible_check_mode }}"
+#   with_items:
+#      - software-properties-common
+#      - ca-certificates
+#      - gnupg2
+
+- name: Add docker repository key.
+  apt_key: url=https://download.docker.com/linux/{{ ansible_distribution|lower }}/gpg state=present
+
+- name: Add docker repository deb
+  apt_repository:
+    repo: 'deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release|lower }} stable'
+    state: present
+    update_cache: yes
+
+- name: Install specific version of Docker Community Edition for {{ ansible_distribution|lower }}.
+  apt: name="{{ docker_package }}={{ docker_version }}*" update_cache=yes state=present force=yes
+  when: docker_version is defined
+  notify: enable docker
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Install latest version of Docker Community Edition for {{ ansible_distribution|lower }}.
+  apt: name="{{ docker_package }}" state=latest
+  when: docker_version is not defined
+  notify: enable docker
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Install docker-compose from official external web link.
+  get_url:
+    url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-Linux-x86_64"
+    dest: /usr/local/bin/docker-compose
+    checksum: "{{ docker_compose_checksum }}"
+    owner: root
+    group: root
+    mode: 0755
+  when: docker_compose_checksum is defined and docker_compose_install
+  ignore_errors: "{{ ansible_check_mode }}"

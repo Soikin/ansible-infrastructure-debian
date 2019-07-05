@@ -1,0 +1,11 @@
+---
+- name: daemon reload
+  systemd: daemon_reload=yes
+
+- name: enable docker
+  systemd: name=docker enabled=yes
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: restart docker
+  systemd: name=docker state=restarted enabled=yes
+  ignore_errors: "{{ ansible_check_mode }}"
