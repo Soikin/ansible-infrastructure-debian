@@ -1,6 +1,7 @@
 ---
-docker_rit_deploy_grafana: false
 docker_rit_deploy_nginx: false
+docker_rit_deploy_portainer: false
+docker_rit_deploy_grafana: false
 
 # Nginx config parameters
 nginx_conf_enable_gzip: true

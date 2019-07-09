@@ -1,0 +1,37 @@
+---
+- name: Create a volume.
+  docker_volume:
+    name: portainer_data
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Create a portainer container.
+  docker_container:
+    name: portainer
+    image: portainer/portainer
+    networks:
+      - name: "default_network"
+    restart_policy: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Copy tls certificates.
+  copy:
+    src: "portainer/nginx/tls/{{ item.src }}"
+    dest: /h/toolset/nginx/tls/
+    owner: toolset
+    group: toolset
+    mode: "{{ item.mode }}"
+  with_items:
+    - { src: "docker.rit.crt", mode: "0644" }
+    - { src: "docker.rit.key", mode: "0600" }
+
+- name: Copy nginx server configs.
+  copy:
+    src: portainer/nginx/conf.d/portainer.conf
+    dest: /h/toolset/nginx/conf.d/
+    owner: toolset
+    group: toolset
+    mode: 0644
+  notify: reload nginx

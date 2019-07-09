@@ -1,1 +1,8 @@
 ---
+- name: reload nginx
+  command: docker exec nginx nginx -s reload
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: restart nginx
+  command: docker exec nginx nginx -s restart
+  ignore_errors: "{{ ansible_check_mode }}"

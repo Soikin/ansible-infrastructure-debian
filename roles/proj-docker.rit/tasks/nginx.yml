@@ -10,16 +10,7 @@
     - /h/toolset/nginx
     - /h/toolset/nginx/log
     - /h/toolset/nginx/conf.d
-    - /h/toolset/nginx/www
     - /h/toolset/nginx/tls
-
-- name: Git clone deployer sub-project.
-  git:
-    repo: git@git.rit:sysadm/docker.rit.git
-    dest: /h/toolset/nginx/www
-    accept_hostkey: yes
-    # update: no # ignore error if files changed
-    # force: yes # replace files if local modifications exist in repository
 
 - name: Copy nginx.conf.
   template:
@@ -28,30 +19,6 @@
     owner: toolset
     group: toolset
     mode: 0644
-
-- name: Copy tls certificates.
-  copy:
-    src: "nginx/tls/{{ item.src }}"
-    dest: /h/toolset/nginx/tls/
-    owner: toolset
-    group: toolset
-    mode: "{{ item.mode }}"
-  with_items:
-    - { src: "docker.rit.crt", mode: "0644" }
-    - { src: "docker.rit.key", mode: "0600" }
-    - { src: "grafana.rit.crt", mode: "0644" }
-    - { src: "grafana.rit.key", mode: "0600" }
-
-- name: Copy nginx server configs.
-  copy:
-    src: "nginx/conf.d/{{ item }}"
-    dest: /h/toolset/nginx/conf.d/
-    owner: toolset
-    group: toolset
-    mode: 0644
-  with_items:
-    - default.conf
-    - grafana.conf
 
 - name: Create a nginx container.
   docker_container:
@@ -67,5 +34,5 @@
       - /h/toolset/nginx/nginx.conf:/etc/nginx/nginx.conf
       - /h/toolset/nginx/log:/var/log/nginx
       - /h/toolset/nginx/conf.d:/etc/nginx/conf.d
-      - /h/toolset/nginx/www:/var/www
       - /h/toolset/nginx/tls:/etc/nginx/tls
+  ignore_errors: "{{ ansible_check_mode }}"
