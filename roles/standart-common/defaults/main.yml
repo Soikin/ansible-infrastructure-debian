@@ -19,6 +19,7 @@ update_ansible_key: false
 #   new_second_full_domain: ""
 
 set_default_timezone: "Europe/Minsk"
+ntp_server: gateway.rit
 # Example: Europe/Minsk or Europe/Moscow
 
 user_list_deploy: []

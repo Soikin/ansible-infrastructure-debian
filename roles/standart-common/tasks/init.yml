@@ -22,9 +22,8 @@
   lineinfile:
     path: /etc/ntp.conf
     regexp: '^server'
-    line: 'server gateway.rit'
+    line: 'server {{ ntp_server }}'
   notify: restart ntp
-  tags: ntp
 
 - name: Change hostname of VM (check mode is not working).
   hostname: name="{{ new_local_hostname }}"
