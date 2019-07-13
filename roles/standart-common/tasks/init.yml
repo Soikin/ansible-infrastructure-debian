@@ -18,6 +18,14 @@
   timezone: name={{ set_default_timezone }}
   notify: restart cron
 
+- name: Set local ntp server.
+  lineinfile:
+    path: /etc/ntp.conf
+    regexp: '^server'
+    line: 'server gateway.rit'
+  notify: restart ntp
+  tags: ntp
+
 - name: Change hostname of VM (check mode is not working).
   hostname: name="{{ new_local_hostname }}"
   register: hostname
