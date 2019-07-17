@@ -1,10 +1,10 @@
 ---
 - hosts: all
   vars:
-    init_default: false
-    init_clamav: false
-    init_usbguard: false
-    init_domain: false
+    init_default: true
+    init_clamav: true
+    init_usbguard: true
+    init_domain: true
   become: yes
   become_user: root
   roles:

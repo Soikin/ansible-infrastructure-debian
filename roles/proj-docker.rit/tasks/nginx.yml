@@ -8,7 +8,6 @@
     mode: '0755'
   with_items:
     - /h/toolset/nginx
-    - /h/toolset/nginx/log
     - /h/toolset/nginx/conf.d
     - /h/toolset/nginx/tls
 
@@ -19,6 +18,7 @@
     owner: toolset
     group: toolset
     mode: 0644
+  notify: reload nginx
 
 - name: Create a nginx container.
   docker_container:
@@ -32,7 +32,6 @@
     restart_policy: unless-stopped
     volumes:
       - /h/toolset/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - /h/toolset/nginx/log:/var/log/nginx
       - /h/toolset/nginx/conf.d:/etc/nginx/conf.d
       - /h/toolset/nginx/tls:/etc/nginx/tls
   ignore_errors: "{{ ansible_check_mode }}"
