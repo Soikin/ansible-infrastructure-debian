@@ -1,0 +1,16 @@
+[html]
+page_title = Change your domain account password
+
+[ldap:0]
+host = {{ ldap_passwd_webui.host }}
+port = {{ ldap_passwd_webui.port }}
+use_ssl = {{ ldap_passwd_webui.use_ssl }}
+base = {{ ldap_passwd_webui.base }}
+type = ad
+ad_domain = {{ ldap_passwd_webui.ad_domain }}
+search_filter = sAMAccountName={uid}
+
+[server]
+server = auto
+host = 0.0.0.0
+port = 8080

@@ -2,6 +2,14 @@
 docker_rit_deploy_nginx: false
 docker_rit_deploy_portainer: false
 docker_rit_deploy_grafana: false
+docker_rit_deploy_ldap_passwd_webui: false
+
+ldap_passwd_webui:
+  host: 172.17.110.254
+  port: 636
+  use_ssl: true
+  base: ou=People,dc=rit,dc=va
+  ad_domain: rit.va
 
 # Nginx config parameters
 nginx_conf_enable_gzip: true

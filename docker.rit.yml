@@ -12,6 +12,7 @@
     docker_rit_deploy_nginx: true
     docker_rit_deploy_portainer: true
     docker_rit_deploy_grafana: true
+    docker_rit_deploy_ldap_passwd_webui: true
   become: yes
   become_user: root
   roles:

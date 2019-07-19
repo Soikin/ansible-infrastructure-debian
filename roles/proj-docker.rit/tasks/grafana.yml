@@ -1,5 +1,5 @@
 ---
-- name: Create a directories for grafana it does not exist.
+- name: grafana | Create a directories for grafana it does not exist.
   file:
     path: "{{ item.path }}"
     state: directory
@@ -12,7 +12,7 @@
     - { path: "/h/toolset/grafana/lib", owner: "472", group: "472" }
     - { path: "/h/toolset/grafana/log", owner: "472", group: "472" }
 
-- name: Copy grafana config.
+- name: grafana | Copy grafana config.
   template:
     src: grafana/grafana.ini.j2
     dest: /h/toolset/grafana/etc/grafana.ini
@@ -20,7 +20,7 @@
     group: 472
     mode: 0644
 
-- name: Create a grafana container.
+- name: grafana | Create a grafana container.
   docker_container:
     name: grafana
     image: grafana/grafana
@@ -34,7 +34,7 @@
       - /h/toolset/grafana/log:/var/log/grafana
   ignore_errors: "{{ ansible_check_mode }}"
 
-- name: Copy tls certificates.
+- name: grafana | Copy tls certificates.
   copy:
     src: "grafana/nginx/tls/{{ item.src }}"
     dest: /h/toolset/nginx/tls/
@@ -45,7 +45,7 @@
     - { src: "grafana.rit.crt", mode: "0644" }
     - { src: "grafana.rit.key", mode: "0600" }
 
-- name: Copy nginx server configs.
+- name: grafana | Copy nginx server configs.
   copy:
     src: grafana/nginx/conf.d/grafana.conf
     dest: /h/toolset/nginx/conf.d/

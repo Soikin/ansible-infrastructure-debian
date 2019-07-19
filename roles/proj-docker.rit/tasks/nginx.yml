@@ -1,5 +1,5 @@
 ---
-- name: Create a directories for nginx it does not exist.
+- name: nginx | Create a directories for nginx it does not exist.
   file:
     path: "{{ item }}"
     state: directory
@@ -11,7 +11,7 @@
     - /h/toolset/nginx/conf.d
     - /h/toolset/nginx/tls
 
-- name: Copy nginx.conf.
+- name: nginx | Copy nginx.conf.
   template:
     src: nginx/nginx.conf.j2
     dest: /h/toolset/nginx/nginx.conf
@@ -20,7 +20,7 @@
     mode: 0644
   notify: reload nginx
 
-- name: Create a nginx container.
+- name: nginx | Create a nginx container.
   docker_container:
     name: nginx
     image: nginx:alpine
