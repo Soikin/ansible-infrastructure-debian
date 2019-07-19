@@ -24,6 +24,7 @@
     regexp: '^server'
     line: 'server {{ ntp_server }}'
   notify: restart ntp
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Change hostname of VM (check mode is not working).
   hostname: name="{{ new_local_hostname }}"

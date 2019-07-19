@@ -40,6 +40,28 @@
   command: "mv /tmp/bundle /opt/Rocket.Chat"
   ignore_errors: "{{ ansible_check_mode }}"
 
+- name: deploy | Configure mongo.
+  lineinfile:
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    dest: /etc/mongod.conf
+  with_items:
+    - { regexp: "^#  engine:", line: "  engine: mmapv1" }
+    - { regexp: "^#replication:", line: "replication:\n  replSetName: rs01" }
+  # notify: mongodb-restart
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: deploy | mongodb-restart.
+  systemd:
+    name: "{{ mongodb_daemon }}"
+    state: restarted
+
+- name: deploy| Wait for mongodb started.
+  pause: seconds=10
+
+- name: deploy | Initiates a mongo replica set.
+  command: /usr/bin/mongo --quiet --eval 'rs.initiate()'
+
 - name: deploy | Configure the chat service.
   template:
     src: rocketchat.service.j2

@@ -1,6 +1,6 @@
 ---
 - import_tasks: deploy.yml
-  when: chat_deploy
+  when: chat_deploy == true
 
 - import_tasks: backups.yml
-  when: chat_backups
+  when: chat_backups == true

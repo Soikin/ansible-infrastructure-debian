@@ -7,11 +7,9 @@
     upgrade_packages: true
     install_utilites: true
     update_init: true
-    create_users: true
-    user_list_deploy: "soikin"
     change_local_hostname: false
     # standart-mongodb
-    mongodb_package_install_version: 3.6
+    mongodb_package_install_version: 4.0
     mongodb_default_conf_replace: false
     # standart-nodejs
     nodejs_version: "8.x"
@@ -39,8 +37,8 @@
     chat_deploy: true
     chat_backups: true
     chat_root_url: "https://chat.rit"
-    chat_version: 0.74.3
-    chat_node_version: 8.11.3
+    chat_version: 1.2.1
+    chat_node_version: 8.11.4
   become: yes
   become_user: root
   roles:
