@@ -1,8 +1,0 @@
----
-- name: reload nginx
-  systemd: name=nginx state=reloaded
-  ignore_errors: "{{ ansible_check_mode }}"
-
-- name: restart nginx
-  systemd: name=nginx state=restarted
-  ignore_errors: "{{ ansible_check_mode }}"

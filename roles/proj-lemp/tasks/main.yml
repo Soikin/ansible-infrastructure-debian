@@ -1,6 +1,0 @@
----
-- import_tasks: "pve-fix.yml"
-  when: ansible_distribution == 'Debian' and 'pve' in ansible_kernel
-
-- import_tasks: "lemp.yml"
-  when: project_deploy

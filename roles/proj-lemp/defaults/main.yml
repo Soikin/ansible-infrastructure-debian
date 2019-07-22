@@ -1,9 +1,0 @@
----
-# Default variables
-project_deploy: false
-# Define it above in your playbook.
-project_lemp_sites_list: []
-  # - name: project.rit
-  #   user: project
-  #   htdocs: htdocs
-  #   ssl: false

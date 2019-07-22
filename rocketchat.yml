@@ -47,6 +47,6 @@
      - { role: standart-mongodb }
      - { role: standart-nodejs }
      - { role: standart-nginx }
-     - { role: proj-web-proxy }
+     - { role: tools-web-proxy }
      - { role: proj-chat }
      - { role: tools-zabbix-agent }

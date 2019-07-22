@@ -19,5 +19,5 @@
      - { role: standart-common }
      - { role: tools-toolset }
      - { role: tools-docker }
-     - { role: proj-docker.rit }
+     - { role: proj-docker }
      - { role: tools-zabbix-agent }
