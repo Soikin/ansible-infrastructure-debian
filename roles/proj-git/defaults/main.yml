@@ -1,0 +1,7 @@
+---
+git_deploy: false
+git_backups: false
+git_version: 1.8.3
+git_user: git
+git_source: "https://dl.gitea.io/gitea/{{ git_version }}/gitea-{{ git_version }}-linux-amd64"
+git_work_dir: /var/lib/gitea

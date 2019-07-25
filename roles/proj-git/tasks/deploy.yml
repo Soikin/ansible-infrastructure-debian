@@ -1,0 +1,63 @@
+---
+- name: deploy | Copy git.rit certificate.
+  copy:
+    src: "{{ item.src }}"
+    dest: "/etc/nginx/tls/{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - { src: "tls/git.rit.crt", dest: "git.rit.crt", mode: "0644" }
+    - { src: "tls/git.rit.key", dest: "git.rit.key", mode: "0600" }
+
+- name: deploy | Ensures root directory if exist.
+  file: path=/h state=directory owner=root group=root
+
+- name: deploy | Create system user for project.
+  user:
+    name: "{{ git_user }}"
+    shell: /bin/false
+    append: yes
+    home: "/h/{{ git_user }}"
+    comment: "git nologin user"
+    state: present
+
+- name: deploy | Downloading binary file.
+  get_url:
+    url: "{{ git_source }}"
+    dest: /usr/local/bin/gitea
+    mode: 0755
+
+- name: deploy | Create required directory structure 1.
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ git_user }}"
+    group: "{{ git_user }}"
+    mode: 0750
+  with_items:
+    - "{{ git_work_dir }}"
+    - "{{ git_work_dir }}/custom"
+    - "{{ git_work_dir }}/data"
+    - "{{ git_work_dir }}/log"
+
+- name: deploy | Create required directory structure 2.
+  file:
+    path: /etc/gitea
+    state: directory
+    owner: root
+    group: "{{ git_user }}"
+    mode: 0770
+
+- name: deploy | Copy empty database file to destination.
+  copy:
+    src: empty.db
+    dest: "{{ git_work_dir }}/data/gitea.db"
+    owner: "{{ git_user }}"
+    group: "{{ git_user }}"
+
+- name: deploy | Configure the gitea service.
+  template:
+    src: gitea.service.j2
+    dest: /lib/systemd/system/gitea.service
+  notify:
+    - gitea-boot
+    - gitea-start

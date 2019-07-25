@@ -1,0 +1,20 @@
+---
+- name: gitea-boot
+  systemd:
+    name: gitea
+    enabled: yes
+
+- name: gitea-start
+  systemd:
+    name: gitea
+    state: started
+
+- name: gitea-restart
+  systemd:
+    name: gitea
+    state: restarted
+
+- name: gitea-reload
+  systemd:
+    name: gitea
+    state: reloaded
