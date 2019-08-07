@@ -20,7 +20,8 @@
   docker_network:
     name: default_network
   ignore_errors: "{{ ansible_check_mode }}"
-
+# ----------------------------------------------------------------------------
+# Importing tasks:
 - import_tasks: nginx.yml
   when: docker_rit_deploy_nginx == true
 
@@ -32,3 +33,6 @@
 
 - import_tasks: ldap-passwd-webui.yml
   when: docker_rit_deploy_ldap_passwd_webui == true
+
+- import_tasks: bookstack.yml
+  when: docker_rit_deploy_bookstack == true

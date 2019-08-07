@@ -1,15 +1,25 @@
 ---
 docker_rit_deploy_nginx: false
-docker_rit_deploy_portainer: false
-docker_rit_deploy_grafana: false
-docker_rit_deploy_ldap_passwd_webui: false
+docker_rit_deploy_portainer: false #nginx required
+docker_rit_deploy_grafana: false #nginx required
+docker_rit_deploy_ldap_passwd_webui: false #nginx required
+docker_rit_deploy_bookstack: false #nginx required
 
-ldap_passwd_webui:
-  host: 172.17.110.254
-  port: 636
-  use_ssl: true
-  base: ou=People,dc=rit,dc=va
-  ad_domain: rit.va
+docker_rit:
+  ldap_passwd_webui:
+    host: 172.17.110.254
+    port: 636
+    use_ssl: true
+    base: ou=People,dc=rit,dc=va
+    ad_domain: rit.va
+  bookstack:
+    url: https://bookstack.rit
+  bookstack_db:
+    host: bookstack_db
+    root_password: jHHQ3cuN5aWxfGzJ
+    database: bookstack
+    user: bookstack
+    password: TJMgaDwhy25bLxb7
 
 # Nginx config parameters
 nginx_conf_enable_gzip: true

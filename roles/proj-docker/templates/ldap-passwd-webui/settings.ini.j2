@@ -2,12 +2,12 @@
 page_title = Change your domain account password
 
 [ldap:0]
-host = {{ ldap_passwd_webui.host }}
-port = {{ ldap_passwd_webui.port }}
-use_ssl = {{ ldap_passwd_webui.use_ssl }}
-base = {{ ldap_passwd_webui.base }}
+host = {{ docker_rit.ldap_passwd_webui.host }}
+port = {{ docker_rit.ldap_passwd_webui.port }}
+use_ssl = {{ docker_rit.ldap_passwd_webui.use_ssl }}
+base = {{ docker_rit.ldap_passwd_webui.base }}
 type = ad
-ad_domain = {{ ldap_passwd_webui.ad_domain }}
+ad_domain = {{ docker_rit.ldap_passwd_webui.ad_domain }}
 search_filter = sAMAccountName={uid}
 
 [server]

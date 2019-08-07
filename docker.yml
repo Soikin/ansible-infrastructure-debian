@@ -10,9 +10,10 @@
     change_local_hostname: false
     # proj-docker.rit
     docker_rit_deploy_nginx: true
-    docker_rit_deploy_portainer: true
-    docker_rit_deploy_grafana: true
-    docker_rit_deploy_ldap_passwd_webui: true
+    docker_rit_deploy_portainer: true #nginx required
+    docker_rit_deploy_grafana: true #nginx required
+    docker_rit_deploy_ldap_passwd_webui: true #nginx required
+    docker_rit_deploy_bookstack: true #nginx required
   become: yes
   become_user: root
   roles:
