@@ -57,7 +57,7 @@
     state: restarted
 
 - name: deploy| Wait for mongodb started.
-  pause: seconds=10
+  pause: seconds=20
 
 - name: deploy | Initiates a mongo replica set.
   command: /usr/bin/mongo --quiet --eval 'rs.initiate()'

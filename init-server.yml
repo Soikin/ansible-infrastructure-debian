@@ -12,4 +12,5 @@
   become_user: root
   roles:
      - { role: standart-common }
+     - { role: tools-toolset }
      # - { role: tools-zabbix-agent }
