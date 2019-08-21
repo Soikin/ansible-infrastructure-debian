@@ -2,5 +2,6 @@
 - import_tasks: deploy.yml
   when: git_deploy == true
 
-# - import_tasks: backups.yml
-#   when: git_backups == true
+- import_tasks: backups.yml
+  when: git_backups == true
+  tags: backups

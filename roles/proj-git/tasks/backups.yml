@@ -1,0 +1,31 @@
+---
+- name: backups | Update apt cache.
+  apt: update_cache=yes
+
+- name: backups | Ensure sqlite3 packages are installed.
+  apt: "name=sqlite3 state=present"
+
+- name: backups | Adding git user to group toolset.
+  user:
+    name: "{{ git_user }}"
+    groups: "{{ toolset_system_user }}"
+    append: yes
+
+- name: backups | Copy backup scripts.
+  template:
+    src: "scripts/{{ item }}.j2"
+    dest: "/h/{{ toolset_system_user }}/scripts/{{ item }}"
+    owner: "{{ toolset_system_user }}"
+    group: "{{ toolset_system_user }}"
+    mode: 0755
+  with_items:
+    - gitea_backup.sh
+    - gitea_restore.sh
+
+- name: backups | Add cronjob.
+  cron:
+    name: "Daily gitea backups"
+    minute: 30
+    hour: 1
+    user: "{{ git_user }}"
+    job: "/h/{{ toolset_system_user }}/scripts/gitea_backup.sh > /h/toolset/scripts/gitea_backup.log 2>&1"

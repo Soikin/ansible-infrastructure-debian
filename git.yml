@@ -25,12 +25,13 @@
       tls: true
     # proj-git
     git_deploy: true
-    git_backups: false
-    git_version: 1.8.3
+    git_backups: true
+    git_version: 1.9.1
   become: yes
   become_user: root
   roles:
      - { role: standart-common }
+     - { role: tools-toolset }
      - { role: standart-nginx }
      - { role: tools-web-proxy }
      - { role: proj-git }

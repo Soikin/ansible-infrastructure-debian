@@ -1,0 +1,39 @@
+#!/bin/bash
+gitea_sqlite_db={{ git_work_dir }}/data/gitea.db
+gitea_repositories=/h/git/gitea-repositories
+gitea_work_dir={{ git_work_dir }}
+gitea_config=/etc/gitea/app.ini
+
+gitea_backup_path=/h/toolset/backups
+now_date=`date +%Y-%m-%d`
+
+chmod -R u-w ${gitea_repositories}
+chmod -R u-w ${gitea_work_dir}
+echo "$(date "+%Y-%m-%d %H-%M-%S"): Lock write access to repositories and workdir."
+
+echo "$(date "+%Y-%m-%d %H-%M-%S"): Start backup db."
+sqlite3 ${gitea_sqlite_db} .dump > ${gitea_backup_path}/db.${now_date}.sql
+echo "$(date "+%Y-%m-%d %H-%M-%S"): Complete backup db."
+
+echo "$(date "+%Y-%m-%d %H-%M-%S"): Start backup repositories."
+tar zcf ${gitea_backup_path}/repositories.${now_date}.tar.gz ${gitea_repositories}
+echo "$(date "+%Y-%m-%d %H-%M-%S"): Complete backup repositories."
+
+echo "$(date "+%Y-%m-%d %H-%M-%S"): Start backup workdir."
+tar --exclude=${gitea_sqlite_db} -zcf ${gitea_backup_path}/workdir.${now_date}.tar.gz ${gitea_work_dir}
+echo "$(date "+%Y-%m-%d %H-%M-%S"): Complete backup workdir."
+
+echo "$(date "+%Y-%m-%d %H-%M-%S"): Start backup app config."
+cp ${gitea_config} ${gitea_backup_path}/config.${now_date}.ini
+echo "$(date "+%Y-%m-%d %H-%M-%S"): Complete backup app config."
+
+chmod -R u+w ${gitea_repositories}
+chmod -R u+w ${gitea_work_dir}
+echo "$(date "+%Y-%m-%d %H-%M-%S"): Unlock write access to repositories and workdir."
+
+echo "$(date "+%Y-%m-%d %H-%M-%S"): Removing old backups."
+find ${gitea_backup_path}/db.*.sql -mtime +2 -delete
+find ${gitea_backup_path}/repositories.*.tar.gz -mtime +2 -delete
+find ${gitea_backup_path}/workdir.*.tar.gz -mtime +2 -delete
+find ${gitea_backup_path}/config.*.ini -mtime +2 -delete
+echo "$(date "+%Y-%m-%d %H-%M-%S"): Done."

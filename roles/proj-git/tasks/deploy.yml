@@ -14,10 +14,10 @@
 - name: deploy | Create system user for project.
   user:
     name: "{{ git_user }}"
-    shell: /bin/false
+    shell: /bin/bash
     append: yes
     home: "/h/{{ git_user }}"
-    comment: "git nologin user"
+    comment: "git user"
     state: present
 
 - name: deploy | Downloading binary file.
