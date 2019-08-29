@@ -61,11 +61,13 @@ install_extra_utilites:         # default not set
 new_local_hostname:     ""      # default not set, example newtest (without .com .net and etc.)
 new_second_full_domain: ""      # default not set
 ```
+
 * standart-mongodb
 ```yml
 mongodb_default_conf_replace:     boolean # default false
 mongodb_package_install_version:  ""      # require, default 3.4 (optional 3.2, 3.4, 3.6)
 ```
+
 * standart-mysql
 ```yml
 mysql_root_username:              ""      # default root
@@ -90,6 +92,7 @@ mysql_users:
      password: secret
      priv: *.*:USAGE
 ```
+
 * standart-nginx
 ```yml
 nginx_repo_use:                   boolean # default false
@@ -110,6 +113,7 @@ nginx_conf_keepalive_timeout:     ""      # default 65
 nginx_default_http_port:          ""      # require, default not set
 nginx_default_https_port:         ""      # optional, default not set
 ```
+
 * standart-nodejs
 ```yml
 nodejs_install_simple:            boolean # default false
@@ -120,6 +124,7 @@ nodejs_npm_local_path:            ""      # default not set, require nodejs_npm_
 nodejs_npm_global_packages:       []      # default not set
 npm_version:                      ""      # default "latest"
 ```
+
 * standart-php
 ```yml
 php_default_version:             ""      # require, default 7.1 (optional 7.0, 7.1, 7.2)
@@ -137,6 +142,7 @@ php_install_dev_package:         boolean # default false, is the same as php7_in
 php_install_pear_package:        boolean # default false, is the same as php7_install_dev_package
 php_list_pear_package:           []      # TODO
 ```
+
 <!-- * standart-postgresql
 ```yml
 postgresql_version:     ""      # default last stable version
@@ -175,6 +181,7 @@ firewall_office_ipv4_adresses:    []      # default 134.17.24.214, 86.57.200.86,
 firewall_office_ipv6_adresses:    []      # default not set
 firewall_log_dropped_packets:     boolean # default false
 ```
+
 * tools-phpmyadmin
 ```yml
 phpmyadmin_clear_install:       boolean # default false
@@ -183,6 +190,7 @@ phpmyadmin_package_name:        ""      # default is set (name of zip archive)
 phpmyadmin_package_checksum:    ""      # default is set (checksum of zip archive)
 phpmyadmin_package_url_debian:  "URL"   # default is set
 ```
+
 * tools-zabbix-agent
 ```yml
 zabbix_server_ip:           ""      # default, 172.17.110.250
@@ -190,6 +198,7 @@ zabbix_version:             ""      # default 4.2
 zabbix_agent_hostname:      ""      # default ansible_fqdn
 zabbix_agent_clear_install: boolean # default false
 ```
+
 * tools-toolset
 ```yml
 toolset_gen_ssl_local:      boolean # default false
@@ -252,34 +261,41 @@ Running a playbook in dry-run mode or check for bad syntax
 --check
 --syntax-check
 ```
+
 A list of tasks/hosts to complete for ansible playbook
 ```sh
 --list-tasks
 --list-hosts
 ```
+
 Override or add to extra variable
 ```sh
 --extra-vars "host=test.rit"
 ```
+
 To limit the run by specifying the host or group
 ```sh
 --limit=debian-test.rit
 --limit=webservers
 ```
+
 Ansible tags
 ```sh
 --skip-tags "developers"
 --tags="test"
 ```
+
 Use another keys
 ```sh
 --key-file=test-ssh/id_rsa
 ```
+
 Verbose mode
 ```sh
 -v    # log level 1
 -vvvv # log level 4
 ```
+
 Run a live command on all of your nodes
 ```sh
 ansible -i test-host all -m ping
@@ -290,6 +306,7 @@ ansible all --key-file=test-ssh/id_rsa -i test-host -m shell -a 'exim -bpc' --li
 --user="root"
 --become # yes
 ```
+
 Show information discovered from system (gather_facts)
 ```sh
 ansible -i test-host test.rit -m setup
