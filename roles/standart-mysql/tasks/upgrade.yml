@@ -1,8 +1,4 @@
 ---
-# Add repository
-- import_tasks: repo.yml
-  when: mysql_package_repo_enable
-
 - name: Update apt cache.
   apt: update_cache=yes
 

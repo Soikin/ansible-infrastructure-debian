@@ -1,8 +1,5 @@
 ---
 # Add repository
-- import_tasks: repo.yml
-  when: mysql_package_repo_enable
-
 - name: Check if MySQL is already installed.
   stat: path=/etc/init.d/mysql
   register: mysql_installed
@@ -20,6 +17,7 @@
 
 - name: Ensure MySQL packages are installed.
   apt: "name={{ mysql_packages }} state=present"
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Ensure MySQL Python libraries are installed.
   apt: "name=python-mysqldb update_cache=yes state=present install_recommends=yes" # ?? add install_recommends=no for mysql 5.6

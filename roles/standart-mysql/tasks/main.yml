@@ -4,6 +4,11 @@
   when: mysql_delete_before_installation
   tags: mysql_delete_packages
   ignore_errors: "{{ ansible_check_mode }}"
+
+# Import mysql repo
+- import_tasks: repo.yml
+  when: mysql_package_repo_enable
+
 # Update oldest packages
 - import_tasks: upgrade.yml
   when: mysql_upgrade_packages
@@ -13,14 +18,17 @@
 # Install packages
 - import_tasks: install.yml
   when: ansible_os_family == 'Debian'
+
 # Package configuration.
 - import_tasks: secure.yml
   when: mysql_secure_installation and not mysql_upgrade_packages
   ignore_errors: "{{ ansible_check_mode }}"
+
 - import_tasks: databases.yml
   when: mysql_create_databases
   tags: mysql_db_and_user
   ignore_errors: "{{ ansible_check_mode }}"
+
 - import_tasks: users.yml
   when: mysql_create_users
   tags: mysql_db_and_user
