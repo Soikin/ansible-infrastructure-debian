@@ -29,10 +29,10 @@ tar -zxf ${gitea_backup_path}/workdir.${now_date}.tar.gz -C /
 chmod -R u+w ${gitea_work_dir}
 echo "$(date "+%Y-%m-%d %H-%M-%S"): Complete restore workdir."
 
-echo "$(date "+%Y-%m-%d %H-%M-%S"): Start restore db."
-> ${gitea_sqlite_db}
-sqlite3 ${gitea_sqlite_db} < ${gitea_backup_path}/db.${now_date}.sql
-echo "$(date "+%Y-%m-%d %H-%M-%S"): Complete restore db."
+# echo "$(date "+%Y-%m-%d %H-%M-%S"): Start restore db."
+# > ${gitea_sqlite_db}
+# sqlite3 ${gitea_sqlite_db} < ${gitea_backup_path}/db.${now_date}.sql
+# echo "$(date "+%Y-%m-%d %H-%M-%S"): Complete restore db."
 
 echo "$(date "+%Y-%m-%d %H-%M-%S"): Start restore repositories."
 rm -rf ${gitea_repositories}
@@ -49,4 +49,5 @@ systemctl start gitea.service
 
 rm /h/toolset/maintenance
 echo "$(date "+%Y-%m-%d %H-%M-%S"): Maintenance mode disabled."
+echo "Don't forget resynchronize pre-receive, update and post-receive hooks and update the '.ssh/authorized_keys' file with Gitea SSH keys. Use admin-panel for this."
 echo "$(date "+%Y-%m-%d %H-%M-%S"): Done."

@@ -11,16 +11,17 @@ chmod -R u-w ${gitea_repositories}
 chmod -R u-w ${gitea_work_dir}
 echo "$(date "+%Y-%m-%d %H-%M-%S"): Lock write access to repositories and workdir."
 
-echo "$(date "+%Y-%m-%d %H-%M-%S"): Start backup db."
-sqlite3 ${gitea_sqlite_db} .dump > ${gitea_backup_path}/db.${now_date}.sql
-echo "$(date "+%Y-%m-%d %H-%M-%S"): Complete backup db."
+# echo "$(date "+%Y-%m-%d %H-%M-%S"): Start backup db."
+# sqlite3 ${gitea_sqlite_db} .dump > ${gitea_backup_path}/db.${now_date}.sql
+# echo "$(date "+%Y-%m-%d %H-%M-%S"): Complete backup db."
 
 echo "$(date "+%Y-%m-%d %H-%M-%S"): Start backup repositories."
 tar zcf ${gitea_backup_path}/repositories.${now_date}.tar.gz ${gitea_repositories}
 echo "$(date "+%Y-%m-%d %H-%M-%S"): Complete backup repositories."
 
 echo "$(date "+%Y-%m-%d %H-%M-%S"): Start backup workdir."
-tar --exclude=${gitea_sqlite_db} -zcf ${gitea_backup_path}/workdir.${now_date}.tar.gz ${gitea_work_dir}
+# tar --exclude=${gitea_sqlite_db} -zcf ${gitea_backup_path}/workdir.${now_date}.tar.gz ${gitea_work_dir}
+tar -zcf ${gitea_backup_path}/workdir.${now_date}.tar.gz ${gitea_work_dir}
 echo "$(date "+%Y-%m-%d %H-%M-%S"): Complete backup workdir."
 
 echo "$(date "+%Y-%m-%d %H-%M-%S"): Start backup app config."
