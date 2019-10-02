@@ -1,4 +1,7 @@
 ---
+- name: Update apt cache
+  apt: update_cache=yes cache_valid_time=86400
+
 - name: Install standart utilites
   apt: pkg={{ standart_utilites }} update_cache=yes cache_valid_time=86400 state=present
   tags: utilites

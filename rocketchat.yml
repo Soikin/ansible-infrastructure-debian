@@ -4,7 +4,6 @@
     setting_environment: prod
     # standart-common
     install_updates: true
-    upgrade_packages: true
     install_utilites: true
     update_init: true
     change_local_hostname: false

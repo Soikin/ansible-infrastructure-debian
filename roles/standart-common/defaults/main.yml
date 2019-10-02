@@ -1,6 +1,5 @@
 ---
 install_updates: false
-upgrade_packages: false
 install_utilites: false
 create_users: false
 update_init: false
