@@ -13,7 +13,7 @@ mysql_create_databases: false
 mysql_create_users: false
 mysql_default_conf_replace: false
 mysql_package_repo_enable: false
-mysql_package_repo_version: "" # 5.6 or 5.7
+mysql_package_repo_version: "" # 5.6 or 5.7 or 8.0
 
 mysql_datadir: /var/lib/mysql
 mysql_user_home: /root
