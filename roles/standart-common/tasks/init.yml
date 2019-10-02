@@ -29,13 +29,13 @@
 - name: Change hostname of VM (check mode is not working).
   hostname: name="{{ new_local_hostname }}"
   register: hostname
-  when: new_local_hostname is defined and change_local_hostname == 'true'
+  when: new_local_hostname is defined and change_local_hostname == true
 
 - name: Include tasks for change hostname.
   import_tasks: init_host.yml
   when: hostname.changed
 
-- name: Copy on WebDev Certificate Authority (CA).
+- name: Copy on VARB Certificate Authority (CA).
   copy: src=VARB-CA.crt dest=/usr/local/share/ca-certificates/VARB-CA.crt
   notify: update ca certificates
 

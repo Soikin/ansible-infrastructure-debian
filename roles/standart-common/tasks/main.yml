@@ -5,7 +5,7 @@
 
 - name: R00
   import_tasks: update.yml
-  when: install_updates == false
+  when: install_updates == true
   tags: update
 
 - name: R01
