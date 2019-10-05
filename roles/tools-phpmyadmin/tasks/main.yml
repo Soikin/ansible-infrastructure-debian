@@ -22,13 +22,20 @@
   stat: path=/usr/share/phpmyadmin/
   register: phpmyadmin
 
-- name: Download and unarchive last source for phpmyadmin (set url in default settings). # ansible v2.0
-  unarchive:
-    src: "{{ phpmyadmin_package_url_debian }}"
+- name: Download last source for phpmyadmin with check (sha256)
+  get_url:
+    url: "{{ phpmyadmin_package_url }}"
     dest: /tmp
-    validate_certs: no
+    checksum: "{{ phpmyadmin_package_checksum }}"
+  when: phpmyadmin.stat.exists == false
+
+- name: Unarchive last source for phpmyadmin (set url in default settings). # ansible v2.0
+  unarchive:
+    src: "/tmp/{{ phpmyadmin_package_name }}.zip"
+    dest: /tmp
     remote_src: yes
   when: phpmyadmin.stat.exists == false
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Move files from tmp to phpmyadmin.
   command: creates="/usr/share/phpmyadmin/" mv /tmp/{{ phpmyadmin_package_name }} /usr/share/phpmyadmin
