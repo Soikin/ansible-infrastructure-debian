@@ -1,6 +1,6 @@
 ---
 # Global default variables
-php_default_version: 7.1  # required
+php_default_version: 7.3  # required
 php_default_conf_replace: false
 
 # Some text

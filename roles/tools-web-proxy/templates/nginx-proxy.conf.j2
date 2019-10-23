@@ -3,7 +3,7 @@
 {% if item.tls %}
 
 server {
-  listen {{ ansible_default_ipv4.address }}:{{ nginx_default_http_port }};
+  listen {{ nginx_default_http_port }};
   server_name {{ item.name }} www.{{ item.name }};
   return 301 https://{{ item.name }}$request_uri;
 }
@@ -12,10 +12,10 @@ server {
 
 server {
 {% if item.tls %}
-  listen {{ ansible_default_ipv4.address }}:{{ nginx_default_https_port }} ssl;
+  listen {{ nginx_default_https_port }} ssl;
   server_name {{ item.name }} www.{{ item.name }};
 {% else %}
-  listen {{ ansible_default_ipv4.address }}:{{ nginx_default_http_port }};
+  listen {{ nginx_default_http_port }};
   server_name {{ item.name }} www.{{ item.name }};
 {% endif %}
 

@@ -13,6 +13,7 @@ nginx_default_conf_replace: false
 nginx_default_vhost_delete: true
 
 # Nginx config parameters
+nginx_conf_diable_server_tokens: true
 nginx_conf_enable_gzip: true
 nginx_static_enable_optimization: true
 

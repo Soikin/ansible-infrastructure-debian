@@ -22,6 +22,9 @@ http {
 
     access_log  /var/log/nginx/access.log  main;
 
+{% if nginx_conf_diable_server_tokens %}
+    server_tokens  off;
+{% endif %}
     sendfile        on;
 {% if nginx_static_enable_optimization %}
     # Nginx optimization for static files
