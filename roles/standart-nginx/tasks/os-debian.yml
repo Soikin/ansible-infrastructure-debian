@@ -1,16 +1,16 @@
 ---
+- name: Debian | Add Nginx.org key
+  apt_key: url=https://nginx.org/keys/nginx_signing.key state=present
+  when: nginx_repo_use
+  register: nginx_repo_added
+
 - name: Debian | Add Nginx stable repository (deb)
-  apt_repository: repo='deb http://nginx.org/packages/{{ ansible_distribution|lower }}/ {{ ansible_distribution_release|lower }} nginx' state=present
+  apt_repository: repo='deb https://nginx.org/packages/{{ ansible_distribution|lower }}/ {{ ansible_distribution_release|lower }} nginx' state=present
   when: nginx_repo_use
 
 - name: Debian | Nginx stable repository (deb-src)
-  apt_repository: repo='deb-src http://nginx.org/packages/{{ ansible_distribution|lower }}/ {{ ansible_distribution_release|lower }} nginx' state=present
+  apt_repository: repo='deb-src https://nginx.org/packages/{{ ansible_distribution|lower }}/ {{ ansible_distribution_release|lower }} nginx' state=present
   when: nginx_repo_use
-
-- name: Debian | Add Nginx.org key
-  apt_key: url=http://nginx.org/keys/nginx_signing.key state=present
-  when: nginx_repo_use
-  register: nginx_repo_added
 
 - name: Debian | Ensure nginx will reinstall if the repository was just added.
   apt:

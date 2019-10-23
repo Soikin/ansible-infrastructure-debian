@@ -18,7 +18,8 @@
       - inherits
       - n
     # standart-nginx
-    nginx_repo_use: true
+    nginx_repo_use: false
+    nginx_repo_mainline_use: true
     nginx_default_conf_replace: true
     nginx_default_vhost_delete: true
     nginx_conf_enable_gzip: true
