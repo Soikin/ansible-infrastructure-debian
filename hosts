@@ -1,17 +1,3 @@
-[officers]
-172.17.110.10
-172.17.110.11
-172.17.110.12
-
-[class]
-172.17.110.[13:60]
-
-[class2]
-172.17.110.[1:9]
-
-#172.17.110.37 #windows 10 Горевой
-#172.17.110.44 #windows 10 Марьянков
-
 [servers]
 service.rit      ansible_host=172.17.110.246
 docker.rit       ansible_host=172.17.110.247
@@ -20,17 +6,7 @@ ihs.rit          ansible_host=172.17.110.248
 zabbix.rit       ansible_host=172.17.110.250
 cloud.rit        ansible_host=172.17.110.251
 chat.rit         ansible_host=172.17.110.252
-glpi.rit         ansible_host=172.17.110.253
 rit.va           ansible_host=172.17.110.254
 
 [servers:vars]
-ansible_user=ansible
-
-[class:vars]
-ansible_user=ansible
-
-[class2:vars]
-ansible_user=ansible
-
-[officers:vars]
 ansible_user=ansible
