@@ -16,6 +16,7 @@
 service.rit      ansible_host=172.17.110.246
 docker.rit       ansible_host=172.17.110.247
 git.rit          ansible_host=172.17.110.249
+ihs.rit          ansible_host=172.17.110.248
 zabbix.rit       ansible_host=172.17.110.250
 cloud.rit        ansible_host=172.17.110.251
 chat.rit         ansible_host=172.17.110.252
