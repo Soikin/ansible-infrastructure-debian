@@ -16,7 +16,6 @@ An Ansible Role on Debian/Ubuntu.
 ### Roles
 * [standart-common](#standart-common)
 * [standart-firewall](#standart-firewall)
-* [standart-init](#standart-init)
 * [standart-mongodb](#standart-mongodb)
 * [standart-mysql](#standart-mysql)
 * [standart-nginx](#standart-nginx)
