@@ -98,6 +98,7 @@ nginx_version:                    ""      # optional, for install specific versi
 nginx_package:                    ""      # default nginx (optional nginx-full or nginx-extras)
 nginx_default_conf_replace:       boolean # default false
 nginx_default_vhost_delete:       boolean # default true
+nginx_conf_diable_server_tokens:  boolean # default true
 nginx_conf_enable_gzip:           boolean # default true
 nginx_static_enable_optimization: boolean # default true
 # Variables for template configs
